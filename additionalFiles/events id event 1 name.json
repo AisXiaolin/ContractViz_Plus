@@ -1,0 +1,33 @@
+{
+  "traceEvents": [
+    {
+      "cat": "foo",
+      "name": "event1",
+      "ph": "b",
+      "ts": 0,
+      "id": 0x300
+    },
+    {
+      "cat": "foo",
+      "name": "flow_event",
+      "id": 0x300,
+      "ph": "s",
+      "ts": 1
+    },
+    {
+      "cat": "foo",
+      "name": "event1",
+      "ph": "e",
+      "ts": 3,
+      "id": 0x300
+    },
+    {
+      "cat": "foo",
+      "name": "flow_event",
+      "id": 0x300,
+      "ph": "f",
+      "ts": 4
+    }
+  ]
+}
+

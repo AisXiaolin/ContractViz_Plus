@@ -214,6 +214,8 @@ public class TimeGraphControl extends TimeGraphBaseControl
 
     private static final String PREFERRED_WIDTH = "width"; //$NON-NLS-1$
 
+    private static final int LINE_SPACING = 10;
+
     /**
      * The alpha color component value for dimmed events
      *
@@ -1692,14 +1694,14 @@ public class TimeGraphControl extends TimeGraphBaseControl
         int ySum = 0;
         if (y < 0) {
             for (int idx = fTopIndex - 1; idx >= 0; idx--) {
-                ySum -= fItemData.fExpandedItems[idx].fItemHeight;
+                ySum -= fItemData.fExpandedItems[idx].fItemHeight - LINE_SPACING;
                 if (y >= ySum) {
                     return idx;
                 }
             }
         } else {
             for (int idx = fTopIndex; idx < fItemData.fExpandedItems.length; idx++) {
-                ySum += fItemData.fExpandedItems[idx].fItemHeight;
+                ySum += fItemData.fExpandedItems[idx].fItemHeight + LINE_SPACING;
                 if (y < ySum) {
                     return idx;
                 }
@@ -2019,7 +2021,7 @@ public class TimeGraphControl extends TimeGraphBaseControl
             }
             /* calculate and set all sums up to requested index */
             while (i < idx) {
-                ySums[i + 1] = ySums[i] + fItemData.fExpandedItems[i].fItemHeight;
+                ySums[i + 1] = ySums[i] + fItemData.fExpandedItems[i].fItemHeight+LINE_SPACING;
                 i++;
             }
         }
@@ -2065,11 +2067,11 @@ public class TimeGraphControl extends TimeGraphBaseControl
                 // draw the foreground markers
                 drawMarkers(bounds, fTimeProvider, fMarkers, true, nameSpace, gc);
             }
-
             try (ScopeLog linksScope = new ScopeLog(LOGGER, Level.FINEST, fLinksScopeLabel)) {
                 // draw the links (arrows)
                 drawLinks(bounds, fTimeProvider, fItemData.fLinks, nameSpace, gc);
             }
+
 
             gc.setAlpha(OPAQUE * 2 / 5);
 
@@ -2486,6 +2488,7 @@ public class TimeGraphControl extends TimeGraphBaseControl
                 break;
             case STATE:
                 drawTimeGraphEntry(gc, time0, selectedTime, rect, selected, pixelsPerNanoSec, iterator);
+
                 break;
             default:
                 break;
@@ -2697,7 +2700,7 @@ public class TimeGraphControl extends TimeGraphBaseControl
             Float heightFactor = styleManager.getFactorStyle(elementStyle, StyleProperties.HEIGHT);
             widthFactor = (heightFactor != null) ? heightFactor * 10.0f : 1.0f;
         }
-        widthFactor = Math.max(1.0f, Math.min(10.0f, widthFactor));
+        widthFactor = Math.max(1.0f, Math.min(10.0f, widthFactor))*3;
         gc.setLineWidth(widthFactor.intValue());
         /* Draw the arrow */
         Point newEndpoint = drawArrowHead(rect.x, rect.y, rect.x + rect.width, rect.y + rect.height, widthFactor, gc);
@@ -2709,6 +2712,33 @@ public class TimeGraphControl extends TimeGraphBaseControl
         }
         return true;
     }
+
+    protected boolean drawArrow(Rectangle rect, GC gc) {
+
+        if (rect == null || ((rect.height == 0) && (rect.width == 0))) {
+            return false;
+        }
+
+        RGBAColor rgba = BLACK;
+        int colorInt = rgba.toInt();
+        Color color = TimeGraphRender.getColor(colorInt);
+        int alpha = rgba.getAlpha();
+        int prevAlpha = gc.getAlpha();
+        gc.setAlpha(alpha);
+
+        gc.setForeground(color);
+        gc.setBackground(color);
+        int old = gc.getLineWidth();
+        Float widthFactor = 1.0f;
+        widthFactor = Math.max(1.0f, Math.min(10.0f, widthFactor));
+        gc.setLineWidth(widthFactor.intValue());
+        /* Draw the arrow */
+        Point newEndpoint = drawArrowHead(rect.x, rect.y, rect.x + rect.width, rect.y + rect.height, widthFactor, gc);
+        gc.drawLine(rect.x, rect.y, newEndpoint.x, newEndpoint.y);
+        gc.setLineWidth(old);
+        gc.setAlpha(prevAlpha);
+        return true;
+        }
 
     /*
      * @author Francis Giraldeau
@@ -2993,6 +3023,7 @@ public class TimeGraphControl extends TimeGraphBaseControl
         if (visible && !Boolean.TRUE.equals(styleManager.getStyle(elementStyle, StyleProperties.annotated())) && last != null) {
             last.add(new PostDrawEvent(event, drawRect));
         }
+
         return visible && !event.isPropertyActive(CoreFilterProperty.DIMMED);
     }
 

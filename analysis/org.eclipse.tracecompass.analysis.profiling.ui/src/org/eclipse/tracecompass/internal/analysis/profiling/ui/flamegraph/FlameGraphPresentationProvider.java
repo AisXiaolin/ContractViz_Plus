@@ -99,6 +99,7 @@ public class FlameGraphPresentationProvider extends TimeGraphPresentationProvide
 
     @Override
     public @Nullable OutputElementStyle getElementStyle(ITimeEvent event) {
+
         if (event instanceof NullTimeEvent) {
             return null;
         }

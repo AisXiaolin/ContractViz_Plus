@@ -17,6 +17,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -34,7 +35,7 @@ import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.jdt.annotation.NonNull;
 import org.eclipse.jdt.annotation.Nullable;
 import org.eclipse.tracecompass.analysis.os.linux.core.model.HostThread;
-import org.eclipse.tracecompass.analysis.profiling.core.base.FlameDefaultPalette2;
+//import org.eclipse.tracecompass.analysis.profiling.core.base.FlameDefaultPalette2;
 import org.eclipse.tracecompass.analysis.profiling.core.base.FlameWithKernelPalette;
 import org.eclipse.tracecompass.analysis.profiling.core.base.ICallStackElement;
 import org.eclipse.tracecompass.analysis.profiling.core.callgraph.ICalledFunction;
@@ -51,6 +52,7 @@ import org.eclipse.tracecompass.internal.analysis.profiling.core.model.ProcessSt
 import org.eclipse.tracecompass.segmentstore.core.ISegment;
 import org.eclipse.tracecompass.statesystem.core.exceptions.TimeRangeException;
 import org.eclipse.tracecompass.statesystem.core.interval.ITmfStateInterval;
+import org.eclipse.tracecompass.tmf.core.CustomColorPaletteProvider;
 import org.eclipse.tracecompass.tmf.core.dataprovider.DataProviderParameterUtils;
 import org.eclipse.tracecompass.tmf.core.model.AbstractTmfTraceDataProvider;
 import org.eclipse.tracecompass.tmf.core.model.CommonStatusMessage;
@@ -87,6 +89,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableList.Builder;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
+
 
 /**
  * This class provides the data from an instrumented callstack analysis, in the
@@ -196,8 +199,15 @@ public class FlameChartDataProvider extends AbstractTmfTraceDataProvider impleme
         if (monitor != null && monitor.isCanceled()) {
             return new TmfModelResponse<>(null, Status.CANCELLED, CommonStatusMessage.TASK_CANCELLED);
         }
+
+
         if (arrows.isEmpty()) {
-            return new TmfModelResponse<>(Collections.emptyList(), Status.COMPLETED, CommonStatusMessage.COMPLETED);
+            List<ITimeGraphArrow> a = new ArrayList<>();
+            a.add(new TimeGraphArrow(3, 6, 1644206199000l, 0, 100000));
+            a.add(new TimeGraphArrow(8, 10, 1644207199000l, 0, 100000));
+
+            return new TmfModelResponse<>(a, Status.COMPLETED, CommonStatusMessage.COMPLETED);
+//            return new TmfModelResponse<>(Collections.emptyList(), Status.COMPLETED, CommonStatusMessage.COMPLETED);
         }
         List<ITimeGraphArrow> tgArrows = new ArrayList<>();
         // First, get the distinct callstacks
@@ -215,7 +225,9 @@ public class FlameChartDataProvider extends AbstractTmfTraceDataProvider impleme
 
         // Find the source and destination entry for each arrow
         for (ITmfStateInterval interval : arrows) {
+
             if (monitor != null && monitor.isCanceled()) {
+
                 return new TmfModelResponse<>(null, Status.CANCELLED, CommonStatusMessage.TASK_CANCELLED);
             }
             EdgeStateValue edge = (EdgeStateValue) interval.getValue();
@@ -224,10 +236,13 @@ public class FlameChartDataProvider extends AbstractTmfTraceDataProvider impleme
                  * by contract all the intervals should have EdgeStateValues but
                  * need to check to avoid NPE
                  */
+
                 continue;
             }
+
             Long src = findEntry(callstacks, edge.getSource(), interval.getStartTime());
             Long dst = findEntry(callstacks, edge.getDestination(), interval.getEndTime() + 1);
+
             if (src != null && dst != null) {
                 long duration = interval.getEndTime() - interval.getStartTime() + 1;
                 tgArrows.add(new TimeGraphArrow(src, dst, interval.getStartTime(), duration, edge.getId()));
@@ -265,6 +280,15 @@ public class FlameChartDataProvider extends AbstractTmfTraceDataProvider impleme
                 return new TmfModelResponse<>(null, Status.COMPLETED, CommonStatusMessage.COMPLETED);
             }
             Map<Long, FlameChartEntryModel> entries = getSelectedEntries(fetchParameters);
+            if (entries.size() == 2) {
+                Iterator<Entry<Long, FlameChartEntryModel>> iterator = entries.entrySet().iterator();
+                Entry<Long, FlameChartEntryModel> entry = iterator.next();
+                Entry<Long, FlameChartEntryModel> entry2 = iterator.next();
+                Map<String, String> tooltip = getTooltip(entry.getKey(), entry.getValue(),entry2.getKey(), times.get(0));
+                return new TmfModelResponse<>(tooltip, Status.COMPLETED, CommonStatusMessage.COMPLETED);
+
+            }
+
             if (entries.size() != 1) {
                 // Not the expected size of tooltip, just return empty
                 return new TmfModelResponse<>(null, Status.COMPLETED, CommonStatusMessage.COMPLETED);
@@ -283,8 +307,10 @@ public class FlameChartDataProvider extends AbstractTmfTraceDataProvider impleme
             if (selectedDepth == null) {
                 return null;
             }
+
             Multimap<CallStackDepth, ISegment> csFunctions = fFcProvider.queryCallStacks(Collections.singleton(selectedDepth), Collections.singleton(time));
             Collection<ISegment> functions = csFunctions.get(selectedDepth);
+
             if (functions.isEmpty()) {
                 return null;
             }
@@ -310,6 +336,48 @@ public class FlameChartDataProvider extends AbstractTmfTraceDataProvider impleme
         default:
             return null;
         }
+    }
+
+    private @Nullable Map<String, String> getTooltip(Long entryId, FlameChartEntryModel entryModel,Long destId, Long time) {
+
+        CallStackDepth selectedDepth = fIdToCallstack.get(entryId);
+        if (selectedDepth == null) {
+            return getTooltip(entryId+1, entryModel, destId-1, time);
+        }
+
+        Multimap<CallStackDepth, ISegment> csFunctions = fFcProvider.queryCallStacks(Collections.singleton(selectedDepth), Collections.singleton(time));
+        Collection<ISegment> functions = csFunctions.get(selectedDepth);
+
+        if (functions.isEmpty()) {
+            return getTooltip(entryId+1, entryModel, destId-1, time);
+        }
+        ISegment next = functions.iterator().next();
+        if (!(next instanceof ICalledFunction)) {
+            return null;
+        }
+        ICalledFunction currentFct = (ICalledFunction) next;
+        Map<String, String> tooltips = new HashMap<>();
+
+        Object symbol = currentFct.getSymbol();
+        tooltips.put("From", symbol instanceof Long ? "0x" + Long.toHexString((Long) symbol) : String.valueOf(symbol)); //$NON-NLS-1$
+        CallStackDepth selectedDepth2 = fIdToCallstack.get(destId);
+        Multimap<CallStackDepth, ISegment> csFunctions2 = fFcProvider.queryCallStacks(Collections.singleton(selectedDepth2), Collections.singleton(time));
+        Collection<ISegment> functions2 = csFunctions2.get(selectedDepth2);
+
+        if (functions2.isEmpty()) {
+            return null;
+        }
+        ISegment next2 = functions2.iterator().next();
+        if (!(next2 instanceof ICalledFunction)) {
+            return null;
+        }
+        ICalledFunction nextFunction = (ICalledFunction) next2;
+        Object symbolNext = nextFunction.getSymbol();
+        tooltips.put("To", symbolNext instanceof Long ? "0x" + Long.toHexString((Long) symbolNext) : String.valueOf(symbolNext)); //$NON-NLS-1$
+        // TODO: Add symbol origin (library, language, etc) when better
+        // supported
+        return tooltips;
+
     }
 
     @Override
@@ -434,6 +502,7 @@ public class FlameChartDataProvider extends AbstractTmfTraceDataProvider impleme
                 selectedEntries.put(selectedItem, entryModel);
             }
         }
+
         return selectedEntries;
     }
 
@@ -616,7 +685,11 @@ public class FlameChartDataProvider extends AbstractTmfTraceDataProvider impleme
         ICalledFunction function = (ICalledFunction) state;
         Integer pid = function.getProcessId();
         String name = String.valueOf(fTimeEventNames.getUnchecked(new Pair<>(pid, function)));
-        return new TimeGraphState(function.getStart(), function.getLength(), name, FlameDefaultPalette2.getInstance().getStyleFor(state));
+        return new TimeGraphState(function.getStart(), function.getLength(), name, CustomColorPaletteProvider.INSTANCE.getStyleFor(name.hashCode(), state));
+
+        //return new TimeGraphState(function.getStart(), function.getLength(), name, FlameDefaultPalette2.getInstance().getStyleFor(state));
+
+
     }
 
     /**

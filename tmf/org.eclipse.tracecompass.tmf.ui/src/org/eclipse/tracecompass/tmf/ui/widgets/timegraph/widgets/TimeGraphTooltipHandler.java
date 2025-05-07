@@ -40,6 +40,7 @@ import org.eclipse.tracecompass.tmf.ui.widgets.timegraph.model.ITimeEvent;
 import org.eclipse.tracecompass.tmf.ui.widgets.timegraph.model.ITimeGraphEntry;
 import org.eclipse.tracecompass.tmf.ui.widgets.timegraph.model.NullTimeEvent;
 
+
 /**
  * Handler for the tool tips in the generic time graph view.
  *
@@ -329,6 +330,7 @@ public class TimeGraphTooltipHandler extends TmfAbstractToolTipHandler {
     }
 
     private void fillValues(ILinkEvent linkEvent) {
+        /*
         addItem(LINK_CATEGORY, Messages.TmfTimeTipHandler_LINK_SOURCE, linkEvent.getEntry().getName());
         addItem(LINK_CATEGORY, Messages.TmfTimeTipHandler_LINK_TARGET, linkEvent.getDestinationEntry().getName());
 
@@ -362,6 +364,14 @@ public class TimeGraphTooltipHandler extends TmfAbstractToolTipHandler {
             } else {
                 addItem(ToolTipString.fromString(LINK_CATEGORY), ToolTipString.fromString(Messages.TmfTimeTipHandler_LINK_TIME), ToolTipString.fromTimestamp(FormatTimeUtils.formatTime(sourceTime, tf, res), sourceTime));
             }
+        }*/
+        Map<String, String> eventAddOns = fTimeGraphProvider.getEventHoverToolTipInfo(linkEvent);
+        if (eventAddOns != null) {
+            for (Entry<String, String> eventAddOn : eventAddOns.entrySet()) {
+                addItem(LINK_CATEGORY, eventAddOn.getKey(), eventAddOn.getValue());
+            }
         }
+        addItem("Amount", String.valueOf(linkEvent.getValue()));
+
     }
 }

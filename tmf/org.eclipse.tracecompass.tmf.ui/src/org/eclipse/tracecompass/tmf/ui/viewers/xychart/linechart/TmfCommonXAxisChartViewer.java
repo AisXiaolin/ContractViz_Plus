@@ -610,7 +610,7 @@ public abstract class TmfCommonXAxisChartViewer extends TmfXYChartViewer {
             ISeriesSet seriesSet = getSwtChart().getSeriesSet();
 
             String seriesName = yModel.getName();
-            OutputElementStyle appearance = getSeriesStyle(yModel.getId());
+            OutputElementStyle appearance = getSeriesStyle((long) seriesName.hashCode());
             BaseXYPresentationProvider presProvider = getPresentationProvider();
             String type = (String) presProvider.getStyleOrDefault(appearance, StyleProperties.SERIES_TYPE, StyleProperties.SeriesType.LINE);
             RGBAColor rgb = presProvider.getColorStyleOrDefault(appearance, StyleProperties.COLOR, DEFAULT_COLOR);

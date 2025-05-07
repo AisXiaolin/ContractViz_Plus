@@ -80,6 +80,7 @@ public class TmfEventField implements ITmfEventField {
             Arrays.stream(fields).forEach(t -> mapBuilder.put(t.getName(), t));
             fFields = mapBuilder.build();
         }
+            //System.out.println(fFields);
     }
 
     /**

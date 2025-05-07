@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.eclipse.jdt.annotation.NonNull;
+import org.eclipse.tracecompass.tmf.core.CustomColorPaletteProvider;
 import org.eclipse.tracecompass.tmf.core.dataprovider.X11ColorUtils;
 import org.eclipse.tracecompass.tmf.core.model.OutputElementStyle;
 import org.eclipse.tracecompass.tmf.core.model.StyleProperties;
@@ -56,7 +57,7 @@ public class XYPresentationProvider implements IXYPresentationProvider {
             StyleProperties.SymbolType.CROSS);
 
     /* Gets the default palette for available colors for XY series */
-    private static final IPaletteProvider COLOR_PALETTE = DefaultColorPaletteProvider.INSTANCE;
+    private static final IPaletteProvider COLOR_PALETTE = CustomColorPaletteProvider.INSTANCE;
 
     /* This maps a series id and an OutputElementStyle */
     private final Map<Long, OutputElementStyle> fYAppearances = new HashMap<>();
@@ -83,7 +84,9 @@ public class XYPresentationProvider implements IXYPresentationProvider {
     }
 
     private OutputElementStyle createAppearance(Long seriesId, String seriesType, int width) {
-        RGBAColor color = generateColor();
+        //RGBAColor color = generateColor();
+        RGBAColor color = CustomColorPaletteProvider.INSTANCE.getColor(seriesId);
+
         Builder<String, Object> builder = ImmutableMap.builder();
         builder.put(StyleProperties.STYLE_NAME, seriesId);
         builder.put(StyleProperties.SERIES_TYPE, seriesType);

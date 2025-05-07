@@ -102,7 +102,7 @@ public final class FlameDefaultPalette2 implements IDataPalette {
         if (callsite instanceof AggregatedCallSite) {
             ICallStackSymbol value = ((AggregatedCallSite) callsite).getObject();
             int hashCode = value.hashCode();
-            return STYLE_MAP.computeIfAbsent(String.valueOf(Math.floorMod(hashCode, NUM_COLORS)), style -> new OutputElementStyle(style));
+                        return STYLE_MAP.computeIfAbsent(String.valueOf(Math.floorMod(hashCode, NUM_COLORS)), style -> new OutputElementStyle(style));
         }
         if (callsite instanceof ICalledFunction) {
             Object value = ((ICalledFunction) callsite).getSymbol();

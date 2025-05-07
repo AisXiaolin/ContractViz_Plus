@@ -49,7 +49,9 @@ public class XmlTreeViewer extends AbstractSelectTreeViewer2 {
                     // do not show the legend for the trace entries.
                     return null;
                 }
-                return getLegendImage(model.getId());
+
+                return getLegendImage((long) model.getName().hashCode());
+
             }
             return null;
         }

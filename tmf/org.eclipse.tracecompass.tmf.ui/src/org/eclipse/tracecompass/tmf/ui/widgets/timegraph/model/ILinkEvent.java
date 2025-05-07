@@ -26,4 +26,6 @@ public interface ILinkEvent extends ITimeEvent {
      * @return The destination entry
      */
     ITimeGraphEntry getDestinationEntry();
+
+    int getValue();
 }

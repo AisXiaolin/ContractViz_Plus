@@ -12,6 +12,7 @@
 package org.eclipse.tracecompass.tmf.ui.views.timegraph;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -714,8 +715,16 @@ public class BaseDataProviderTimeGraphView extends AbstractTimeGraphView {
     protected @NonNull Map<@NonNull String, @NonNull Object> getFetchTooltipParameters(long time, long item, @Nullable IOutputElement element) {
         @NonNull Map<@NonNull String, @NonNull Object> parameters = new HashMap<>();
         parameters.put(DataProviderParameterUtils.REQUESTED_TIME_KEY, Collections.singletonList(time));
-        parameters.put(DataProviderParameterUtils.REQUESTED_ITEMS_KEY, Collections.singletonList(item));
         if (element != null) {
+            if(element instanceof ITimeGraphArrow) {
+
+                parameters.put(DataProviderParameterUtils.REQUESTED_ITEMS_KEY, Arrays.asList(item, ((ITimeGraphArrow) element).getDestinationId()));
+
+            }else {
+                parameters.put(DataProviderParameterUtils.REQUESTED_ITEMS_KEY, Collections.singletonList(item));
+
+            }
+
             parameters.put(DataProviderParameterUtils.REQUESTED_ELEMENT_KEY, element);
         }
         return parameters;
@@ -761,6 +770,7 @@ public class BaseDataProviderTimeGraphView extends AbstractTimeGraphView {
             if (event instanceof TimeEvent) {
                 element = ((TimeEvent) event).getModel();
             }
+
             Map<@NonNull String, @NonNull Object> parameters = getFetchTooltipParameters(time, entryId, element);
             TmfModelResponse<Map<String, String>> response = provider.fetchTooltip(parameters, new NullProgressMonitor());
             Map<String, String> tooltip = response.getModel();

@@ -95,8 +95,10 @@ public final class DefaultColorPaletteProvider implements IPaletteProvider {
     public static final RGBAColor YELLOW = new RGBAColor(255, 255, 0);
 
     private static final List<@NonNull RGBAColor> PALETTE = Arrays.asList(
-            BLUE, RED, GREEN, MAGENTA, CYAN, DARK_BLUE, DARK_RED, DARK_GREEN,
-            DARK_MAGENTA, DARK_CYAN, DARK_YELLOW, BLACK, GRAY, YELLOW);
+                        BLUE, RED, GREEN, MAGENTA, CYAN, DARK_BLUE, DARK_RED, DARK_GREEN,
+                        DARK_MAGENTA, DARK_CYAN, DARK_YELLOW, BLACK, GRAY, YELLOW);
+
+
 
     /**
      * Get the default default color palette provider
