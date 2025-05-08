@@ -214,7 +214,7 @@ public class TimeGraphControl extends TimeGraphBaseControl
 
     private static final String PREFERRED_WIDTH = "width"; //$NON-NLS-1$
 
-    private static final int LINE_SPACING = 10;
+    private static final int LINE_SPACING = 5;
 
     /**
      * The alpha color component value for dimmed events

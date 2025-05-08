@@ -112,6 +112,8 @@ Java and all Java-based trademarks are trademarks of Oracle Corporation in the U
    </license>
 
    <plugins>
+      <plugin id="org.eclipse.tracecompass.incubator.traceevent.core"/>
+      <plugin id="org.eclipse.tracecompass.incubator.traceevent.ui"/>
    </plugins>
 
    <features>
@@ -146,6 +148,7 @@ Java and all Java-based trademarks are trademarks of Oracle Corporation in the U
       <feature id="org.eclipse.tracecompass.tmf.cli"/>
       <feature id="org.eclipse.equinox.executable"/>
       <feature id="org.eclipse.justj.openjdk.hotspot.jre.minimal.stripped" installMode="root"/>
+      <feature id="org.eclipse.tracecompass.incubator.traceevent" installMode="root"/>
    </features>
 
    <configurations>
