@@ -1,0 +1,13 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: StateDiagram
+Bundle-SymbolicName: org.example.statediagram;singleton:=true
+Bundle-Version: 1.0.0.qualifier
+Bundle-Activator: org.example.statediagram.Activator
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime,
+ org.eclipse.zest.core,
+ org.eclipse.zest.layouts
+Bundle-RequiredExecutionEnvironment: JavaSE-17
+Automatic-Module-Name: org.example.statediagram
+Bundle-ActivationPolicy: lazy
