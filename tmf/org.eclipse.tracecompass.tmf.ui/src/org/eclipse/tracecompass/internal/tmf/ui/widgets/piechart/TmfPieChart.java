@@ -37,8 +37,8 @@ import org.eclipse.swtchart.IPlotArea;
 import org.eclipse.swtchart.ISeries.SeriesType;
 import org.eclipse.tracecompass.internal.tmf.ui.viewers.piecharts.Messages;
 import org.eclipse.tracecompass.tmf.core.CustomColorPaletteProvider;
-import org.eclipse.tracecompass.tmf.core.presentation.IPaletteProvider;
-import org.eclipse.tracecompass.tmf.core.presentation.QualitativePaletteProvider;
+//import org.eclipse.tracecompass.tmf.core.presentation.IPaletteProvider;
+//import org.eclipse.tracecompass.tmf.core.presentation.QualitativePaletteProvider;
 import org.eclipse.tracecompass.tmf.core.presentation.RGBAColor;
 
 /**
@@ -209,7 +209,7 @@ public class TmfPieChart extends Chart {
 
     private static final int X_GAP = 10;
     private Point fCenter = new Point(0, 0);
-    private int fCurrentColor = 0;
+    //private int fCurrentColor = 0;
     private String fSelectedId;
     private int[] fEndAngles;
     private List<PieSlice> fSlices = new ArrayList<>();
@@ -254,7 +254,7 @@ public class TmfPieChart extends Chart {
         IBarSeries<?> bs = (IBarSeries<?>) getSeriesSet().createSeries(SeriesType.BAR, id);
         Color sliceColor = REGISTRY.get(id);
         if (sliceColor == null) {
-            fCurrentColor += 3;
+            //fCurrentColor += 3;
             //RGBAColor rgba = PALETTE.get().get(fCurrentColor % NUM_COLORS);
             RGBAColor rgba = PALETTE.getColor((long)label.hashCode());
             REGISTRY.put(id, new RGB(rgba.getRed(), rgba.getGreen(), rgba.getBlue()));

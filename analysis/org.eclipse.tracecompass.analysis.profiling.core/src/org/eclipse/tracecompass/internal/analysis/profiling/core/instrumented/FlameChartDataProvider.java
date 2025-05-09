@@ -203,8 +203,11 @@ public class FlameChartDataProvider extends AbstractTmfTraceDataProvider impleme
 
         if (arrows.isEmpty()) {
             List<ITimeGraphArrow> a = new ArrayList<>();
+            Map<String, Object> s= new  HashMap<>();
+            s.put("color", "#FF0000");
+            OutputElementStyle style = new OutputElementStyle(null, s);
             a.add(new TimeGraphArrow(3, 6, 1644206199000l, 0, 100000));
-            a.add(new TimeGraphArrow(8, 10, 1644207199000l, 0, 100000));
+            a.add(new TimeGraphArrow(8, 10, 1644207199000l + 300000l, -600000l, 100000, style));
 
             return new TmfModelResponse<>(a, Status.COMPLETED, CommonStatusMessage.COMPLETED);
 //            return new TmfModelResponse<>(Collections.emptyList(), Status.COMPLETED, CommonStatusMessage.COMPLETED);

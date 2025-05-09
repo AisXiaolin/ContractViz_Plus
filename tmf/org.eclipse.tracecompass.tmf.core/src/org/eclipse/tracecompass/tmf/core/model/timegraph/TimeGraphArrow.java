@@ -90,6 +90,16 @@ public class TimeGraphArrow extends OutputElement implements ITimeGraphArrow {
         fValue = Integer.MIN_VALUE;
     }
 
+    public TimeGraphArrow(long sourceId, long destinationId, long time, long duration, int value, OutputElementStyle style) {
+        super(style);
+        fSourceId = sourceId;
+        fDestinationId = destinationId;
+        fStartTime = time;
+        fDuration = duration;
+        fValue = value;
+    }
+
+
     @Override
     public long getSourceId() {
         return fSourceId;
