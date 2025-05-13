@@ -376,5 +376,4 @@ public class BaseDataProviderTimeGraphPresentationProvider extends TimeGraphPres
     public void setStateTypeNameResolver(Function<@Nullable ITimeGraphEntry, @Nullable String> resolver) {
         fStateTypeResolver = resolver;
     }
-
 }

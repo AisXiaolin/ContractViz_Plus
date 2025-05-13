@@ -8,9 +8,15 @@ import java.util.Map;
 import org.eclipse.jdt.annotation.NonNull;
 //import org.eclipse.tracecompass.analysis.profiling.core.base.FlameDefaultPalette2;
 import org.eclipse.tracecompass.segmentstore.core.ISegment;
+import org.eclipse.tracecompass.tmf.core.event.ITmfEvent;
+import org.eclipse.tracecompass.tmf.core.event.ITmfEventField;
 import org.eclipse.tracecompass.tmf.core.model.OutputElementStyle;
+import org.eclipse.tracecompass.tmf.core.model.StyleProperties;
 import org.eclipse.tracecompass.tmf.core.presentation.IPaletteProvider;
 import org.eclipse.tracecompass.tmf.core.presentation.RGBAColor;
+import org.eclipse.tracecompass.tmf.core.trace.ITmfContext;
+import org.eclipse.tracecompass.tmf.core.trace.ITmfTrace;
+import org.eclipse.tracecompass.tmf.core.trace.TmfTraceManager;
 
 
 public class CustomColorPaletteProvider implements IPaletteProvider{
@@ -150,12 +156,41 @@ public class CustomColorPaletteProvider implements IPaletteProvider{
      * @param state
      * @return
      */
-    public OutputElementStyle getStyleFor(long name, ISegment state) {
+    public OutputElementStyle getStyleFor(String name, ISegment state) {
         HashMap<String, Object> style = new HashMap<>();
-        RGBAColor color = getColor(name);
+        RGBAColor color = getColor((long)name.hashCode());
         String hexColor = toHexColor(color);
         state.getClass();
-        style.put("background-color", hexColor);
+        style.put(StyleProperties.BACKGROUND_COLOR, hexColor);
+
+
+
+
+
+
+        ITmfTrace trace = TmfTraceManager.getInstance().getActiveTrace();
+        if (trace !=null) {
+
+            ITmfContext ctx = trace.seekEvent(0);
+            ITmfEvent event;
+
+            while ((event = trace.getNext(ctx)) != null) {
+                ITmfEventField content = event.getContent();
+                if (name.equals(content.getField("name").getFormattedValue()) && String.valueOf(state.getStart()/1000).equals(content.getField("ts").getFormattedValue())) {
+
+                    ITmfEventField argsField = content.getField("args/success");
+                    if (argsField != null) {
+                        if ("false".equals(argsField.getFormattedValue())) {
+                            style.put(StyleProperties.BORDER_COLOR, "#ff0000");
+                            style.put(StyleProperties.BORDER_WIDTH, 2);
+                            style.put(StyleProperties.BORDER_STYLE, "");
+                        }
+
+                    }
+                }
+            }
+        }
+
         //return new OutputElementStyle(FlameDefaultPalette2.getInstance().getStyleFor(state).getParentKey(), s);
         return new OutputElementStyle("1", style);
     }

@@ -81,6 +81,7 @@ public class TmfEventField implements ITmfEventField {
             fFields = mapBuilder.build();
         }
             //System.out.println(fFields);
+
     }
 
     /**

@@ -46,6 +46,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.tracecompass.internal.analysis.profiling.core.callstack.provider.CallStackDataProvider;
 import org.eclipse.tracecompass.internal.analysis.profiling.core.callstack.provider.CallStackEntryModel;
+import org.eclipse.tracecompass.internal.analysis.profiling.core.instrumented.FlameChartDataProvider;
 import org.eclipse.tracecompass.internal.analysis.profiling.ui.Activator;
 import org.eclipse.tracecompass.internal.analysis.profiling.ui.views.flamechart.Messages;
 import org.eclipse.tracecompass.internal.provisional.tmf.ui.widgets.timegraph.BaseDataProviderTimeGraphPresentationProvider;
@@ -61,11 +62,13 @@ import org.eclipse.tracecompass.tmf.core.model.tree.ITmfTreeDataModel;
 import org.eclipse.tracecompass.tmf.core.response.TmfModelResponse;
 import org.eclipse.tracecompass.tmf.core.signal.TmfSelectionRangeUpdatedSignal;
 import org.eclipse.tracecompass.tmf.core.signal.TmfSignalHandler;
+import org.eclipse.tracecompass.tmf.core.signal.TmfSignalManager;
 import org.eclipse.tracecompass.tmf.core.signal.TmfTraceClosedSignal;
 import org.eclipse.tracecompass.tmf.core.signal.TmfTraceSelectedSignal;
 import org.eclipse.tracecompass.tmf.core.signal.TmfWindowRangeUpdatedSignal;
 import org.eclipse.tracecompass.tmf.core.symbols.ISymbolProvider;
 import org.eclipse.tracecompass.tmf.core.symbols.SymbolProviderManager;
+import org.eclipse.tracecompass.tmf.core.timestamp.ITmfTimestamp;
 import org.eclipse.tracecompass.tmf.core.timestamp.TmfTimeRange;
 import org.eclipse.tracecompass.tmf.core.timestamp.TmfTimestamp;
 import org.eclipse.tracecompass.tmf.core.timestamp.TmfTimestampFormat;
@@ -86,6 +89,8 @@ import org.eclipse.tracecompass.tmf.ui.widgets.timegraph.widgets.TimeGraphContro
 import org.eclipse.tracecompass.tmf.ui.widgets.timegraph.widgets.Utils;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchActionConstants;
+import org.example.statediagram.signal.NodeSelectedSignal;
+import org.example.statediagram.model.State;
 
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
@@ -325,6 +330,7 @@ public class FlameChartView extends BaseDataProviderTimeGraphView {
         setFilterColumns(FILTER_COLUMN_NAMES);
         setFilterLabelProvider(new CallStackTreeLabelProvider());
         setStateTypeNameSupplier(RESOLVER);
+        TmfSignalManager.register(this);
     }
 
     // ------------------------------------------------------------------------
@@ -791,4 +797,21 @@ public class FlameChartView extends BaseDataProviderTimeGraphView {
             resetSymbols();
         }
     }
+
+    @TmfSignalHandler
+    public void elementSelected(NodeSelectedSignal signal) {
+        System.out.println("wwwwwwwwwwww");
+        State state = signal.getState();
+//        @NonNull
+//        FlameChartDataProvider provider = (FlameChartDataProvider) DataProviderManager.getInstance().fetchExistingDataProvider(getTrace(), getProviderId(), ITimeGraphDataProvider.class);
+//        provider.stateSelected(state);
+//        Display.getDefault().asyncExec(() -> {
+//            getTimeGraphViewer().getTimeGraphControl().redraw();
+//        });
+        ITmfTimestamp selStartTime = TmfTimestamp.fromNanos(1644206199000L);
+        ITmfTimestamp selEndTime = TmfTimestamp.fromNanos(1644208799000L);
+        TmfSignalManager.dispatchSignal(new TmfSelectionRangeUpdatedSignal(this, selStartTime, selEndTime));
+
+    }
+
 }

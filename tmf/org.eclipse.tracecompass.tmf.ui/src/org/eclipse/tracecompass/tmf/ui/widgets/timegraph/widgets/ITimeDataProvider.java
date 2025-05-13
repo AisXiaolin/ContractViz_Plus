@@ -217,4 +217,6 @@ public interface ITimeDataProvider extends ITimeReset {
      * </ul>
      */
     TimeFormat getTimeFormat();
+
+    void stateSelected();
 }

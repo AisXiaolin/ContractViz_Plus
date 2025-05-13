@@ -28,6 +28,7 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.tracecompass.internal.tmf.ui.Messages;
 import org.eclipse.tracecompass.tmf.core.TmfStrings;
+import org.eclipse.tracecompass.tmf.core.model.ITimeElement;
 import org.eclipse.tracecompass.tmf.core.timestamp.TmfTimestamp;
 import org.eclipse.tracecompass.tmf.ui.viewers.TmfAbstractToolTipHandler;
 import org.eclipse.tracecompass.tmf.ui.views.FormatTimeUtils;
@@ -39,6 +40,8 @@ import org.eclipse.tracecompass.tmf.ui.widgets.timegraph.model.IMarkerEvent;
 import org.eclipse.tracecompass.tmf.ui.widgets.timegraph.model.ITimeEvent;
 import org.eclipse.tracecompass.tmf.ui.widgets.timegraph.model.ITimeGraphEntry;
 import org.eclipse.tracecompass.tmf.ui.widgets.timegraph.model.NullTimeEvent;
+import org.eclipse.tracecompass.tmf.ui.widgets.timegraph.model.TimeEvent;
+import org.example.statediagram.model.TransactionArrow;
 
 
 /**
@@ -372,6 +375,19 @@ public class TimeGraphTooltipHandler extends TmfAbstractToolTipHandler {
             }
         }
         addItem("Amount", String.valueOf(linkEvent.getValue()));
+
+        ITimeElement arrow = ((TimeEvent)linkEvent).getModel();
+        if (arrow instanceof TransactionArrow) {
+            TransactionArrow transactionArrow = (TransactionArrow) arrow;
+            System.out.println(transactionArrow);
+
+            addItem("Token Name", transactionArrow.getTokenName());
+            addItem("Token Symbol", transactionArrow.getType());
+
+        }
+
+
+
 
     }
 }

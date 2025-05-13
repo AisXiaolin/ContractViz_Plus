@@ -93,8 +93,6 @@ import org.eclipse.tracecompass.common.core.log.TraceCompassLog;
 import org.eclipse.tracecompass.common.core.math.SaturatedArithmetic;
 import org.eclipse.tracecompass.internal.provisional.tmf.ui.model.IStylePresentationProvider;
 import org.eclipse.tracecompass.internal.provisional.tmf.ui.widgets.timegraph.ITimeGraphStylePresentationProvider;
-import org.eclipse.tracecompass.internal.tmf.ui.Activator;
-import org.eclipse.tracecompass.internal.tmf.ui.ITmfUIPreferences;
 import org.eclipse.tracecompass.internal.tmf.ui.util.LineClipper;
 import org.eclipse.tracecompass.internal.tmf.ui.util.SymbolHelper;
 import org.eclipse.tracecompass.internal.tmf.ui.widgets.timegraph.TimeGraphRender;
@@ -141,7 +139,6 @@ import org.eclipse.tracecompass.tmf.ui.widgets.timegraph.model.MarkerEvent;
 import org.eclipse.tracecompass.tmf.ui.widgets.timegraph.model.TimeGraphEntry;
 import org.eclipse.tracecompass.traceeventlogger.LogUtils;
 import org.eclipse.tracecompass.traceeventlogger.LogUtils.ScopeLog;
-
 import com.google.common.collect.Iterables;
 
 /**
@@ -2713,33 +2710,6 @@ public class TimeGraphControl extends TimeGraphBaseControl
         return true;
     }
 
-    protected boolean drawArrow(Rectangle rect, GC gc) {
-
-        if (rect == null || ((rect.height == 0) && (rect.width == 0))) {
-            return false;
-        }
-
-        RGBAColor rgba = BLACK;
-        int colorInt = rgba.toInt();
-        Color color = TimeGraphRender.getColor(colorInt);
-        int alpha = rgba.getAlpha();
-        int prevAlpha = gc.getAlpha();
-        gc.setAlpha(alpha);
-
-        gc.setForeground(color);
-        gc.setBackground(color);
-        int old = gc.getLineWidth();
-        Float widthFactor = 1.0f;
-        widthFactor = Math.max(1.0f, Math.min(10.0f, widthFactor));
-        gc.setLineWidth(widthFactor.intValue());
-        /* Draw the arrow */
-        Point newEndpoint = drawArrowHead(rect.x, rect.y, rect.x + rect.width, rect.y + rect.height, widthFactor, gc);
-        gc.drawLine(rect.x, rect.y, newEndpoint.x, newEndpoint.y);
-        gc.setLineWidth(old);
-        gc.setAlpha(prevAlpha);
-        return true;
-        }
-
     /*
      * @author Francis Giraldeau
      *
@@ -4103,9 +4073,12 @@ public class TimeGraphControl extends TimeGraphBaseControl
                 refreshExpanded(expandedItemList, item);
             }
 
-            if (Activator.getDefault().getPreferenceStore().getBoolean(ITmfUIPreferences.FILTER_EMPTY_ROWS) ? hasSavedFilters() : isHideEmptyRowsFilterActive()) {
-                filterData(expandedItemList);
-            }
+//            if (Activator.getDefault().getPreferenceStore().getBoolean(ITmfUIPreferences.FILTER_EMPTY_ROWS) ? hasSavedFilters() : isHideEmptyRowsFilterActive()) {
+//                filterData(expandedItemList);
+//            }
+
+            filterData(expandedItemList);
+
 
             fExpandedItems = expandedItemList.toArray(new Item[0]);
             resetYSums();

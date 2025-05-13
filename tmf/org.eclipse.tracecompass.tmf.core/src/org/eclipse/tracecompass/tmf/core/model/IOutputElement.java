@@ -28,8 +28,9 @@ public interface IOutputElement extends ICoreElementResolver, ICorePropertyColle
      * Get the value, may be unused if the element has a style
      *
      * @return Value
+     * @since 9.7
      */
-    default int getValue() {
+    default long getValue() {
         return Integer.MIN_VALUE;
     }
 

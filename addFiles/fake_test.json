@@ -1,0 +1,331 @@
+{
+  "traceEvents": [
+    {
+      "name": "swap",
+      "cat": "call",
+      "ph": "B",
+      "pid": 14157500,
+      "tid": 3,
+      "ts": 1644209699,
+      "args": {
+        "from": "0x68b3465833fb72a70ecdf485e0e4c7bd8665fc45",
+        "to": "0x3b957c2b577f3cdef216048680c692c57230fc95",
+        "gasUsed": "0x15f14",
+        "input": "0x128acb08000000000000000000000000dbccea4c4fbe723aca82fd4bd605d80617f53d6800000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000024dac0dd000000000000000000000000fffd8963efd1fc6a506488495d951d5263988d2500000000000000000000000000000000000000000000000000000000000000a000000000000000000000000000000000000000000000000000000000000000c00000000000000000000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000000000000000000004000000000000000000000000068b3465833fb72a70ecdf485e0e4c7bd8665fc45000000000000000000000000000000000000000000000000000000000000002ba0b86991c6218b36c1d19d4a2e9eb0ce3606eb4800271069cbf75a08ae672d6fa6cd8e36c31fc1ba899b8c000000000000000000000000000000000000000000",
+        "idx": 15,
+        "amount": "618315997",
+        "kind": "TRANSFER_FUNCTION",
+        "success": true,
+        "parent_idx": 14,
+        "children_indices": [
+          16
+        ],
+        "is_event": true,
+        "token_name": "USD Coin",
+        "token_symbol": "USDC",
+        "token_contract": "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
+        "token_decimals": 6
+      }
+    },
+    {
+      "name": "swap",
+      "cat": "call",
+      "ph": "C",
+      "pid": 14157500,
+      "tid": 3,
+      "ts": 1644209699,
+      "args": {
+        "count": 1
+      }
+    },
+    {
+      "name": "swap",
+      "cat": "call",
+      "ph": "E",
+      "pid": 14157500,
+      "tid": 3,
+      "ts": 1644213699,
+      "args": {
+        "output": "0xffffffffffffffffffffffffffffffffffffffffffffe3601798cbe629a1a5c40000000000000000000000000000000000000000000000000000000024dac0dd"
+      }
+    },
+    {
+      "name": "transfer",
+      "cat": "call",
+      "ph": "B",
+      "pid": 14157500,
+      "tid": 4,
+      "ts": 1644211699,
+      "args": {
+        "from": "0x3b957c2b577f3cdef216048680c692c57230fc95",
+        "to": "0x69cbf75a08ae672d6fa6cd8e36c31fc1ba899b8c",
+        "gasUsed": "0x787f",
+        "input": "0xa9059cbb000000000000000000000000dbccea4c4fbe723aca82fd4bd605d80617f53d68000000000000000000000000000000000000000000001c9fe8673419d65e5a3c"
+      }
+    },
+    {
+      "name": "transfer",
+      "cat": "call",
+      "ph": "C",
+      "pid": 14157500,
+      "tid": 4,
+      "ts": 1644211699,
+      "args": {
+        "count": 1
+      }
+    },
+    {
+      "name": "transfer",
+      "cat": "call",
+      "ph": "E",
+      "pid": 14157500,
+      "tid": 4,
+      "ts": 1644212199,
+      "args": {
+        "output": "0x0000000000000000000000000000000000000000000000000000000000000001"
+      }
+    },
+    {
+      "name": "balanceOf",
+      "cat": "staticcall",
+      "ph": "B",
+      "pid": 14157500,
+      "tid": 4,
+      "ts": 1644212199,
+      "args": {
+        "from": "0x3b957c2b577f3cdef216048680c692c57230fc95",
+        "to": "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
+        "gasUsed": "0xcf3",
+        "input": "0x70a082310000000000000000000000003b957c2b577f3cdef216048680c692c57230fc95",
+        "idx": 8,
+        "amount": "200000000000000000",
+        "kind": "TRANSFER_FUNCTION",
+        "success": true,
+        "parent_idx": 6,
+        "children_indices": [],
+        "is_event": true,
+        "token_name": "Wrapped Ether",
+        "token_symbol": "WETH",
+        "token_contract": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+        "token_decimals": 18
+
+      }
+    },
+    {
+      "name": "balanceOf",
+      "cat": "staticcall",
+      "ph": "C",
+      "pid": 14157500,
+      "tid": 4,
+      "ts": 1644212199,
+      "args": {
+        "count": 1
+      }
+    },
+    {
+      "name": "balanceOf",
+      "cat": "staticcall",
+      "ph": "E",
+      "pid": 14157500,
+      "tid": 4,
+      "ts": 1644212699,
+      "args": {
+        "output": "0x00000000000000000000000000000000000000000000000000000005a47f7260"
+      }
+    },
+    {
+      "name": "balanceOf",
+      "cat": "delegatecall",
+      "ph": "B",
+      "pid": 14157500,
+      "tid": 5,
+      "ts": 1644212499,
+      "args": {
+        "from": "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
+        "to": "0xa2327a938febf5fec13bacfb16ae10ecbc4cbdcf",
+        "gasUsed": "0x9e1",
+        "input": "0x70a082310000000000000000000000003b957c2b577f3cdef216048680c692c57230fc95"
+      }
+    },
+    {
+      "name": "balanceOf",
+      "cat": "delegatecall",
+      "ph": "C",
+      "pid": 14157500,
+      "tid": 5,
+      "ts": 1644212499,
+      "args": {
+        "count": 1
+      }
+    },
+    {
+      "name": "balanceOf",
+      "cat": "delegatecall",
+      "ph": "E",
+      "pid": 14157500,
+      "tid": 5,
+      "ts": 1644212699,
+      "args": {
+        "output": "0x00000000000000000000000000000000000000000000000000000005a47f7260"
+      }
+    },
+    {
+      "name": "uniswapV3SwapCallback",
+      "cat": "call",
+      "ph": "B",
+      "pid": 14157500,
+      "tid": 4,
+      "ts": 1644212699,
+      "args": {
+        "from": "0x3b957c2b577f3cdef216048680c692c57230fc95",
+        "to": "0x68b3465833fb72a70ecdf485e0e4c7bd8665fc45",
+        "gasUsed": "0x3538",
+        "input": "0xfa461e33ffffffffffffffffffffffffffffffffffffffffffffe3601798cbe629a1a5c40000000000000000000000000000000000000000000000000000000024dac0dd000000000000000000000000000000000000000000000000000000000000006000000000000000000000000000000000000000000000000000000000000000c00000000000000000000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000000000000000000004000000000000000000000000068b3465833fb72a70ecdf485e0e4c7bd8665fc45000000000000000000000000000000000000000000000000000000000000002ba0b86991c6218b36c1d19d4a2e9eb0ce3606eb4800271069cbf75a08ae672d6fa6cd8e36c31fc1ba899b8c000000000000000000000000000000000000000000",
+        "idx": 0,
+        "amount": "0x2c68af0bb140000",
+        "kind": "CALL",
+        "success": true,
+        "parent_idx": null,
+        "children_indices": [
+          1
+        ],
+        "is_event": false,
+        "token_name": "Ethereum",
+        "token_symbol": "ETH",
+        "token_contract": "0x0000000000000000000000000000000000000000",
+        "token_decimals": 18
+      }
+    },
+    {
+      "name": "uniswapV3SwapCallback",
+      "cat": "call",
+      "ph": "C",
+      "pid": 14157500,
+      "tid": 4,
+      "ts": 1644212699,
+      "args": {
+        "count": 1
+      }
+    },
+    {
+      "name": "uniswapV3SwapCallback",
+      "cat": "call",
+      "ph": "E",
+      "pid": 14157500,
+      "tid": 4,
+      "ts": 1644213199,
+      "args": {
+        "output": "0x"
+      }
+    },
+    {
+      "name": "transfer",
+      "cat": "call",
+      "ph": "B",
+      "pid": 14157500,
+      "tid": 5,
+      "ts": 1644212999,
+      "args": {
+        "from": "0x68b3465833fb72a70ecdf485e0e4c7bd8665fc45",
+        "to": "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
+        "gasUsed": "0x2591",
+        "input": "0xa9059cbb0000000000000000000000003b957c2b577f3cdef216048680c692c57230fc950000000000000000000000000000000000000000000000000000000024dac0dd"
+      }
+    },
+    {
+      "name": "transfer",
+      "cat": "call",
+      "ph": "C",
+      "pid": 14157500,
+      "tid": 5,
+      "ts": 1644212999,
+      "args": {
+        "count": 1
+      }
+    },
+    {
+      "name": "transfer",
+      "cat": "call",
+      "ph": "E",
+      "pid": 14157500,
+      "tid": 5,
+      "ts": 1644213199,
+      "args": {
+        "output": "0x0000000000000000000000000000000000000000000000000000000000000001"
+      }
+    },
+    {
+      "name": "transfer",
+      "cat": "delegatecall",
+      "ph": "B",
+      "pid": 14157500,
+      "tid": 6,
+      "ts": 1644213099,
+      "args": {
+        "from": "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
+        "to": "0xa2327a938febf5fec13bacfb16ae10ecbc4cbdcf",
+        "gasUsed": "0x227c",
+        "input": "0xa9059cbb0000000000000000000000003b957c2b577f3cdef216048680c692c57230fc950000000000000000000000000000000000000000000000000000000024dac0dd"
+      }
+    },
+    {
+      "name": "transfer",
+      "cat": "delegatecall",
+      "ph": "C",
+      "pid": 14157500,
+      "tid": 6,
+      "ts": 1644213099,
+      "args": {
+        "count": 1
+      }
+    },
+    {
+      "name": "transfer",
+      "cat": "delegatecall",
+      "ph": "E",
+      "pid": 14157500,
+      "tid": 6,
+      "ts": 1644213199,
+      "args": {
+        "output": "0x0000000000000000000000000000000000000000000000000000000000000001"
+      }
+    },
+    {
+      "name": "balanceOf",
+      "cat": "staticcall",
+      "ph": "B",
+      "pid": 14157500,
+      "tid": 4,
+      "ts": 1644213199,
+      "args": {
+        "from": "0x3b957c2b577f3cdef216048680c692c57230fc95",
+        "to": "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
+        "gasUsed": "0x523",
+        "input": "0x70a082310000000000000000000000003b957c2b577f3cdef216048680c692c57230fc95"
+      }
+    },
+    {
+      "name": "balanceOf",
+      "cat": "staticcall",
+      "ph": "C",
+      "pid": 14157500,
+      "tid": 4,
+      "ts": 1644213199,
+      "args": {
+        "count": 1
+      }
+    },
+    {
+      "name": "balanceOf",
+      "cat": "staticcall",
+      "ph": "E",
+      "pid": 14157500,
+      "tid": 4,
+      "ts": 1644213699,
+      "args": {
+        "output": "0x00000000000000000000000000000000000000000000000000000005c95a333d"
+      }
+    }
+  ],
+  "displayTimeUnit": "ns"
+}

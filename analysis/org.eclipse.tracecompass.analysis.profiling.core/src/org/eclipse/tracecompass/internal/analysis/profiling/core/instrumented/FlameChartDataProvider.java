@@ -42,7 +42,6 @@ import org.eclipse.tracecompass.analysis.profiling.core.callgraph.ICalledFunctio
 import org.eclipse.tracecompass.analysis.profiling.core.callstack2.CallStack;
 import org.eclipse.tracecompass.analysis.profiling.core.callstack2.CallStackDepth;
 import org.eclipse.tracecompass.analysis.profiling.core.callstack2.CallStackSeries;
-import org.eclipse.tracecompass.analysis.profiling.core.instrumented.EdgeStateValue;
 import org.eclipse.tracecompass.analysis.profiling.core.instrumented.IFlameChartProvider;
 import org.eclipse.tracecompass.analysis.profiling.core.model.IHostModel;
 import org.eclipse.tracecompass.common.core.log.TraceCompassLog;
@@ -59,12 +58,12 @@ import org.eclipse.tracecompass.tmf.core.model.CommonStatusMessage;
 import org.eclipse.tracecompass.tmf.core.model.IOutputStyleProvider;
 import org.eclipse.tracecompass.tmf.core.model.OutputElementStyle;
 import org.eclipse.tracecompass.tmf.core.model.OutputStyleModel;
+import org.eclipse.tracecompass.tmf.core.model.StyleProperties;
 import org.eclipse.tracecompass.tmf.core.model.timegraph.ITimeGraphArrow;
 import org.eclipse.tracecompass.tmf.core.model.timegraph.ITimeGraphDataProvider;
 import org.eclipse.tracecompass.tmf.core.model.timegraph.ITimeGraphRowModel;
 import org.eclipse.tracecompass.tmf.core.model.timegraph.ITimeGraphState;
 import org.eclipse.tracecompass.tmf.core.model.timegraph.ITimeGraphStateFilter;
-import org.eclipse.tracecompass.tmf.core.model.timegraph.TimeGraphArrow;
 import org.eclipse.tracecompass.tmf.core.model.timegraph.TimeGraphModel;
 import org.eclipse.tracecompass.tmf.core.model.timegraph.TimeGraphRowModel;
 import org.eclipse.tracecompass.tmf.core.model.timegraph.TimeGraphState;
@@ -79,7 +78,9 @@ import org.eclipse.tracecompass.tmf.core.trace.ITmfTrace;
 import org.eclipse.tracecompass.tmf.core.util.Pair;
 import org.eclipse.tracecompass.traceeventlogger.LogUtils.FlowScopeLog;
 import org.eclipse.tracecompass.traceeventlogger.LogUtils.FlowScopeLogBuilder;
-
+import org.example.statediagram.model.Transaction;
+import org.example.statediagram.model.TransactionArrow;
+import org.example.statediagram.model.TransactionManager;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
@@ -100,6 +101,7 @@ import com.google.common.collect.Multimap;
  */
 public class FlameChartDataProvider extends AbstractTmfTraceDataProvider implements ITimeGraphDataProvider<FlameChartEntryModel>, IOutputStyleProvider {
 
+    private int fState = 0;
     /**
      * Provider ID.
      */
@@ -191,6 +193,8 @@ public class FlameChartDataProvider extends AbstractTmfTraceDataProvider impleme
         fAnalysisId = secondaryId;
         fArrowProvider = new FlameChartArrowProvider(trace);
         resetFunctionNames(new NullProgressMonitor());
+
+
     }
 
     @Override
@@ -201,17 +205,76 @@ public class FlameChartDataProvider extends AbstractTmfTraceDataProvider impleme
         }
 
 
-        if (arrows.isEmpty()) {
+        /*if (arrows.isEmpty()) {
             List<ITimeGraphArrow> a = new ArrayList<>();
-            Map<String, Object> s= new  HashMap<>();
-            s.put("color", "#FF0000");
-            OutputElementStyle style = new OutputElementStyle(null, s);
-            a.add(new TimeGraphArrow(3, 6, 1644206199000l, 0, 100000));
-            a.add(new TimeGraphArrow(8, 10, 1644207199000l + 300000l, -600000l, 100000, style));
+            TransactionManager transactionManager = TransactionManager.getInstance();
+            List<Transaction> transactions = transactionManager.getTransactions();
+            for (Transaction transaction : transactions) {
+
+                HostThread senderThread = new HostThread(trace.getHostId(), transaction.getSender());
+                HostThread receiverThread = new HostThread(trace.getHostId(), transaction.getReceiver());
+
+                Long sourceId = findEntry(getCallStacks(), senderThread, transaction.getTime());
+                Long destId = findEntry(getCallStacks(), receiverThread, transaction.getTime());
+
+                System.out.println(transaction);
+                a.add(new TimeGraphArrow(transaction.getSender(), transaction.getReceiver(), transaction.getTime(), 0, transaction.getAmount()));
+            }
+//            Map<String, Object> s= new  HashMap<>();
+//            s.put("color", "#FF0000");
+//            OutputElementStyle style = new OutputElementStyle(null, s);
+//
+//            a.add(new TimeGraphArrow(3, 6, 1644206199000l, 0, 100000));
+//            a.add(new TimeGraphArrow(8, 10, 1644207199000l + 300000l, -600000l, 100000, style));
+
+/*            System.out.println( "\n \n\nTEST\n"+TmfTraceManager.getInstance().getOpenedTraces());
+            ITmfTrace trace = TmfTraceManager.getInstance().getOpenedTraces().iterator().next();
+            ITmfContext ctx = trace.seekEvent(0); // Commencer depuis le début
+            ITmfEvent event;
+
+            while ((event = trace.getNext(ctx)) != null) {
+                ITmfEventField content = event.getContent();
+
+                // Récupérer le champ "args"
+                ITmfEventField argsField = content.getField("args/from");
+
+                if (argsField != null) {
+                    for (@NonNull ITmfEventField arg : content.getFields()) {
+                        String key = arg.getName();
+                        Object value = arg.getValue();
+                        //System.out.println("arg: " + key + " = " + value);
+                        if ("args/test".equals(key)) {
+
+
+                            HashMap<String, String> map = new HashMap<String, String>();
+                            JSONObject jObject = new JSONObject((String)value);
+
+                            System.out.println("value : "+value);
+                            System.out.println("json : "+jObject);
+
+                            Iterator<?> keys = jObject.keys();
+
+                            while( keys.hasNext() ){
+                                String key2 = (String)keys.next();
+                                String value2 = jObject.getString(key2);
+                                map.put(key2, value2);
+
+                            }
+
+                            System.out.println("map : "+map);
+
+
+
+
+                        }
+                    }
+                }
+            }
+
 
             return new TmfModelResponse<>(a, Status.COMPLETED, CommonStatusMessage.COMPLETED);
 //            return new TmfModelResponse<>(Collections.emptyList(), Status.COMPLETED, CommonStatusMessage.COMPLETED);
-        }
+        }*/
         List<ITimeGraphArrow> tgArrows = new ArrayList<>();
         // First, get the distinct callstacks
         List<CallStackDepth> csList = new ArrayList<>();
@@ -226,34 +289,69 @@ public class FlameChartDataProvider extends AbstractTmfTraceDataProvider impleme
             callstacks.add(csd.getCallStack());
         }
 
-        // Find the source and destination entry for each arrow
-        for (ITmfStateInterval interval : arrows) {
+        ITmfTrace trace = getTrace();
 
-            if (monitor != null && monitor.isCanceled()) {
+        List<ITimeGraphArrow> a = new ArrayList<>();
+        TransactionManager transactionManager = TransactionManager.getInstance();
+        List<Transaction> transactions = transactionManager.getTransactions(trace);
+        for (Transaction transaction : transactions) {
 
-                return new TmfModelResponse<>(null, Status.CANCELLED, CommonStatusMessage.TASK_CANCELLED);
-            }
-            EdgeStateValue edge = (EdgeStateValue) interval.getValue();
-            if (edge == null) {
-                /*
-                 * by contract all the intervals should have EdgeStateValues but
-                 * need to check to avoid NPE
-                 */
+            HostThread senderThread = new HostThread(trace.getHostId(), transaction.getSender());
+            HostThread receiverThread = new HostThread(trace.getHostId(), transaction.getReceiver());
 
-                continue;
-            }
+            Long sourceId = findEntry(callstacks, senderThread, transaction.getTime());
+            Long destId = findEntry(callstacks, receiverThread, transaction.getTime());
 
-            Long src = findEntry(callstacks, edge.getSource(), interval.getStartTime());
-            Long dst = findEntry(callstacks, edge.getDestination(), interval.getEndTime() + 1);
+            System.out.println(transaction);
+            if (transaction.isSelfTransaction()) {
+              Map<String, Object> s= new  HashMap<>();
+              if ("USDC".equals(transaction.getType())) {
+                  s.put("color", "#FF0000");
 
-            if (src != null && dst != null) {
-                long duration = interval.getEndTime() - interval.getStartTime() + 1;
-                tgArrows.add(new TimeGraphArrow(src, dst, interval.getStartTime(), duration, edge.getId()));
+              } else {
+                  s.put("color", "#00FF00");
+
+              }
+              OutputElementStyle style = new OutputElementStyle(null, s);
+                a.add(new TransactionArrow(sourceId-1, destId+1, transaction.getTime() + 300000l, -600000l, transaction.getAmount(), style, transaction.getType(), transaction.getTokenName()));
+            } else {
+                a.add(new TransactionArrow(sourceId, destId, transaction.getTime(), 0l, transaction.getAmount(), transaction.getType(), transaction.getTokenName()));
             }
         }
 
-        return new TmfModelResponse<>(tgArrows, Status.COMPLETED, CommonStatusMessage.COMPLETED);
+        return new TmfModelResponse<>(a, Status.COMPLETED, CommonStatusMessage.COMPLETED);
+
+//
+//        // Find the source and destination entry for each arrow
+//        for (ITmfStateInterval interval : arrows) {
+//
+//            if (monitor != null && monitor.isCanceled()) {
+//
+//                return new TmfModelResponse<>(null, Status.CANCELLED, CommonStatusMessage.TASK_CANCELLED);
+//            }
+//            EdgeStateValue edge = (EdgeStateValue) interval.getValue();
+//            if (edge == null) {
+//                /*
+//                 * by contract all the intervals should have EdgeStateValues but
+//                 * need to check to avoid NPE
+//                 */
+//
+//                continue;
+//            }
+//
+//            Long src = findEntry(callstacks, edge.getSource(), interval.getStartTime());
+//            Long dst = findEntry(callstacks, edge.getDestination(), interval.getEndTime() + 1);
+//
+//            if (src != null && dst != null) {
+//                long duration = interval.getEndTime() - interval.getStartTime() + 1;
+//                tgArrows.add(new TimeGraphArrow(src, dst, interval.getStartTime(), duration, edge.getId()));
+//            }
+//        }
+//
+//        return new TmfModelResponse<>(tgArrows, Status.COMPLETED, CommonStatusMessage.COMPLETED);
     }
+
+
 
     private @Nullable Long findEntry(Set<CallStack> callstacks, HostThread hostThread, long ts) {
         for (CallStack callstack : callstacks) {
@@ -514,6 +612,7 @@ public class FlameChartDataProvider extends AbstractTmfTraceDataProvider impleme
         try (FlowScopeLog scope = new FlowScopeLogBuilder(LOGGER, Level.FINE, "FlameChartDataProvider#fetchRowModel") //$NON-NLS-1$
                 .setCategory(getClass().getSimpleName()).build()) {
 
+
             Map<Long, FlameChartEntryModel> entries = getSelectedEntries(fetchParameters);
             List<Long> times = DataProviderParameterUtils.extractTimeRequested(fetchParameters);
             if (times == null) {
@@ -687,12 +786,32 @@ public class FlameChartDataProvider extends AbstractTmfTraceDataProvider impleme
         }
         ICalledFunction function = (ICalledFunction) state;
         Integer pid = function.getProcessId();
+
         String name = String.valueOf(fTimeEventNames.getUnchecked(new Pair<>(pid, function)));
-        return new TimeGraphState(function.getStart(), function.getLength(), name, CustomColorPaletteProvider.INSTANCE.getStyleFor(name.hashCode(), state));
+
+        return new TimeGraphState(function.getStart(), function.getLength(), name, getStyle(name, state));
+        //return new TimeGraphState(function.getStart(), function.getLength(), name, CustomColorPaletteProvider.INSTANCE.getStyleFor(name.hashCode(), state));
 
         //return new TimeGraphState(function.getStart(), function.getLength(), name, FlameDefaultPalette2.getInstance().getStyleFor(state));
+    }
 
+    private OutputElementStyle getStyle(String name, ISegment state) {
+        HashMap<String, Object> style = new HashMap<>();
+        switch(fState) {
 
+        case 1:
+            style.put(StyleProperties.BACKGROUND_COLOR, "#ff0000");
+            return new OutputElementStyle("1", style);
+
+        case 2:
+            style.put(StyleProperties.BACKGROUND_COLOR, "#00ff00");
+            return new OutputElementStyle("1", style);
+        case 3:
+            style.put(StyleProperties.BACKGROUND_COLOR, "#0000ff");
+            return new OutputElementStyle("1", style);
+        default:
+            return CustomColorPaletteProvider.INSTANCE.getStyleFor(name, state);
+        }
     }
 
     /**
@@ -782,4 +901,20 @@ public class FlameChartDataProvider extends AbstractTmfTraceDataProvider impleme
         Map<String, OutputElementStyle> styles = FlameWithKernelPalette.getInstance().getStyles();
         return new TmfModelResponse<>(new OutputStyleModel(styles), ITmfResponse.Status.COMPLETED, CommonStatusMessage.COMPLETED);
     }
+
+
+
+    public void stateSelected(String state) {
+        if ("Unprivileged".equals(state)) {
+            fState = 1;
+        } else if ("Privileged".equals(state)) {
+            fState = 2;
+        }else if ("Exploited".equals(state)) {
+            fState = 3;
+        }
+        else {
+            fState = 0;
+        }
+    }
+
 }
