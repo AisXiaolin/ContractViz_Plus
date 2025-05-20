@@ -50,12 +50,21 @@ public class TransactionManager {
 
 	public void addTransaction(ITmfTrace trace, ITmfEventField eventField) {
 		System.out.println(eventField);
-		long time = Long.parseLong(eventField.getField("ts").getFormattedValue());
-		int receiver = Integer.parseInt(eventField.getField("tid").getFormattedValue());
-		String amount = eventField.getField("args/amount").getFormattedValue();		
-		String type = eventField.getField("args/token_symbol").getFormattedValue();	
-		String tokenName = eventField.getField("args/token_name").getFormattedValue();	
-		System.out.println("DEBUG :" + tokenName);
+	    ITmfEventField tsField = eventField.getField("ts");  
+	    long time = (tsField != null) ? Long.parseLong(tsField.getFormattedValue()) : 0;  
+	      
+	    ITmfEventField tidField = eventField.getField("tid");  
+	    int receiver = (tidField != null) ? Integer.parseInt(tidField.getFormattedValue()) : 0;  
+	      
+	    ITmfEventField amountField = eventField.getField("args/amount");  
+	    String amount = (amountField != null) ? amountField.getFormattedValue() : "";  
+	      
+	    ITmfEventField tokenSymbolField = eventField.getField("args/token_symbol");  
+	    String type = (tokenSymbolField != null) ? tokenSymbolField.getFormattedValue() : "";  
+	      
+	    ITmfEventField tokenNameField = eventField.getField("args/token_name");  
+	    String tokenName = (tokenNameField != null) ? tokenNameField.getFormattedValue() : "";  
+	      	
 		int sender = receiver;
 		if ("ETH".equals(type)) {
 			sender--;
