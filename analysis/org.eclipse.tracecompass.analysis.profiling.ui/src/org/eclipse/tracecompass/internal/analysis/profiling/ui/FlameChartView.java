@@ -34,7 +34,7 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.graphics.RGB;
+//import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.graphics.RGBA;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
@@ -55,7 +55,7 @@ import org.eclipse.tracecompass.tmf.core.model.timegraph.ITimeGraphState;
 import org.eclipse.tracecompass.tmf.core.model.timegraph.TimeGraphEntryModel;
 import org.eclipse.tracecompass.tmf.core.model.timegraph.TimeGraphModel;
 import org.eclipse.tracecompass.tmf.core.model.tree.ITmfTreeDataModel;
-import org.eclipse.tracecompass.tmf.core.presentation.RGBAColor;
+//import org.eclipse.tracecompass.tmf.core.presentation.RGBAColor;
 import org.eclipse.tracecompass.tmf.core.response.TmfModelResponse;
 import org.eclipse.tracecompass.tmf.core.signal.TmfSelectionRangeUpdatedSignal;
 import org.eclipse.tracecompass.tmf.core.signal.TmfSignalHandler;
@@ -65,7 +65,7 @@ import org.eclipse.tracecompass.tmf.core.signal.TmfTraceSelectedSignal;
 import org.eclipse.tracecompass.tmf.core.signal.TmfWindowRangeUpdatedSignal;
 import org.eclipse.tracecompass.tmf.core.symbols.ISymbolProvider;
 import org.eclipse.tracecompass.tmf.core.symbols.SymbolProviderManager;
-import org.eclipse.tracecompass.tmf.core.timestamp.ITmfTimestamp;
+//import org.eclipse.tracecompass.tmf.core.timestamp.ITmfTimestamp;
 import org.eclipse.tracecompass.tmf.core.timestamp.TmfTimeRange;
 import org.eclipse.tracecompass.tmf.core.timestamp.TmfTimestamp;
 import org.eclipse.tracecompass.tmf.core.timestamp.TmfTimestampFormat;
@@ -76,7 +76,7 @@ import org.eclipse.tracecompass.tmf.ui.symbols.SymbolProviderConfigDialog;
 import org.eclipse.tracecompass.tmf.ui.symbols.TmfSymbolProviderUpdatedSignal;
 import org.eclipse.tracecompass.tmf.ui.views.TmfViewFactory;
 import org.eclipse.tracecompass.tmf.ui.views.timegraph.BaseDataProviderTimeGraphView;
-import org.eclipse.tracecompass.tmf.ui.widgets.timegraph.TimeGraphBookmarkEvent;
+//import org.eclipse.tracecompass.tmf.ui.widgets.timegraph.TimeGraphBookmarkEvent;
 import org.eclipse.tracecompass.tmf.ui.widgets.timegraph.TimeGraphPresentationProvider;
 import org.eclipse.tracecompass.tmf.ui.widgets.timegraph.TimeGraphViewer;
 import org.eclipse.tracecompass.tmf.ui.widgets.timegraph.model.ITimeGraphEntry;
@@ -139,10 +139,7 @@ public class FlameChartView extends BaseDataProviderTimeGraphView {
 
     @SuppressWarnings("unchecked")
     private static final Comparator<ITimeGraphEntry>[] COMPARATORS = new Comparator[] {
-            Comparator.comparing(ITimeGraphEntry::getName),
-            DEPTH_COMPARATOR,
-            Comparator.comparingLong(ITimeGraphEntry::getStartTime),
-            Comparator.comparingLong(ITimeGraphEntry::getEndTime)
+            DEPTH_COMPARATOR
     };
 
     private static final String[] FILTER_COLUMN_NAMES = new String[] {
