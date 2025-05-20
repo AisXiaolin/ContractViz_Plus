@@ -5,12 +5,12 @@ public class Transaction {
 	private int fSender;
 	private int fReceiver;
 	private long fTime;
-	private long fAmount;
+	private String fAmount;
 	private String fType;
 	private String fTokenName;
 
 
-	public Transaction(int sender, int receiver, long time, long amount, String type, String tokenName) {
+	public Transaction(int sender, int receiver, long time, String amount, String type, String tokenName) {
 		fSender = sender;
 		fReceiver = receiver;
 		fTime = time*1000;
@@ -19,7 +19,7 @@ public class Transaction {
 		fTokenName = tokenName;
 	}
 	
-	public long getAmount() {
+	public String getAmount() {
 		return fAmount;
 	}
 	public int getReceiver() {

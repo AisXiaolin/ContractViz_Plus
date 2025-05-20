@@ -25,7 +25,7 @@ public class TimeGraphArrow extends OutputElement implements ITimeGraphArrow {
     private final long fDestinationId;
     private final long fStartTime;
     private final long fDuration;
-    private final long fValue;
+    private final int fValue;
 
     /**
      * Constructor
@@ -41,7 +41,7 @@ public class TimeGraphArrow extends OutputElement implements ITimeGraphArrow {
      * @param value
      *            value payload associated with this arrow
      */
-    public TimeGraphArrow(long sourceId, long destinationId, long time, long duration, long value) {
+    public TimeGraphArrow(long sourceId, long destinationId, long time, long duration, int value) {
         super(null);
         fSourceId = sourceId;
         fDestinationId = destinationId;
@@ -90,7 +90,7 @@ public class TimeGraphArrow extends OutputElement implements ITimeGraphArrow {
         fValue = Integer.MIN_VALUE;
     }
 
-    public TimeGraphArrow(long sourceId, long destinationId, long time, long duration, long value, OutputElementStyle style) {
+    public TimeGraphArrow(long sourceId, long destinationId, long time, long duration, int value, OutputElementStyle style) {
         super(style);
         fSourceId = sourceId;
         fDestinationId = destinationId;
@@ -121,7 +121,7 @@ public class TimeGraphArrow extends OutputElement implements ITimeGraphArrow {
     }
 
     @Override
-    public long getValue() {
+    public int getValue() {
         return fValue;
     }
 

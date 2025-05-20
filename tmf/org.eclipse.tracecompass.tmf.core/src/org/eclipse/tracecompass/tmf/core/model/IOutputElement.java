@@ -30,7 +30,7 @@ public interface IOutputElement extends ICoreElementResolver, ICorePropertyColle
      * @return Value
      * @since 9.7
      */
-    default long getValue() {
+    default int getValue() {
         return Integer.MIN_VALUE;
     }
 

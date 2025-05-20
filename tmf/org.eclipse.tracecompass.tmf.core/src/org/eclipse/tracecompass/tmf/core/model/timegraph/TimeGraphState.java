@@ -28,7 +28,7 @@ import com.google.common.collect.Multimap;
 public class TimeGraphState extends OutputElement implements ITimeGraphState {
     private final long fStartTime;
     private final long fDuration;
-    private final long fValue;
+    private final int fValue;
     private final @Nullable String fLabel;
 
     /**
@@ -41,7 +41,7 @@ public class TimeGraphState extends OutputElement implements ITimeGraphState {
      * @param value
      *            Type of state (event type)
      */
-    public TimeGraphState(long time, long duration, long value) {
+    public TimeGraphState(long time, long duration, int value) {
         super(null);
         fStartTime = time;
         fDuration = duration;
@@ -116,7 +116,7 @@ public class TimeGraphState extends OutputElement implements ITimeGraphState {
     }
 
     @Override
-    public long getValue() {
+    public int getValue() {
         return fValue;
     }
 

@@ -174,7 +174,7 @@ public class FlameChartDataProvider extends AbstractTmfTraceDataProvider impleme
 
     private final IFlameChartProvider fFcProvider;
     private final String fAnalysisId;
-    private final FlameChartArrowProvider fArrowProvider;
+    //private final FlameChartArrowProvider fArrowProvider;
     private @Nullable TmfModelResponse<TmfTreeModel<FlameChartEntryModel>> fCached;
 
     /**
@@ -191,7 +191,7 @@ public class FlameChartDataProvider extends AbstractTmfTraceDataProvider impleme
         super(trace);
         fFcProvider = module;
         fAnalysisId = secondaryId;
-        fArrowProvider = new FlameChartArrowProvider(trace);
+        //fArrowProvider = new FlameChartArrowProvider(trace);
         resetFunctionNames(new NullProgressMonitor());
 
 
@@ -199,7 +199,7 @@ public class FlameChartDataProvider extends AbstractTmfTraceDataProvider impleme
 
     @Override
     public TmfModelResponse<List<ITimeGraphArrow>> fetchArrows(Map<String, Object> fetchParameters, @Nullable IProgressMonitor monitor) {
-        List<ITmfStateInterval> arrows = fArrowProvider.fetchArrows(fetchParameters, monitor);
+        //List<ITmfStateInterval> arrows = fArrowProvider.fetchArrows(fetchParameters, monitor);
         if (monitor != null && monitor.isCanceled()) {
             return new TmfModelResponse<>(null, Status.CANCELLED, CommonStatusMessage.TASK_CANCELLED);
         }
@@ -275,7 +275,7 @@ public class FlameChartDataProvider extends AbstractTmfTraceDataProvider impleme
             return new TmfModelResponse<>(a, Status.COMPLETED, CommonStatusMessage.COMPLETED);
 //            return new TmfModelResponse<>(Collections.emptyList(), Status.COMPLETED, CommonStatusMessage.COMPLETED);
         }*/
-        List<ITimeGraphArrow> tgArrows = new ArrayList<>();
+        //List<ITimeGraphArrow> tgArrows = new ArrayList<>();
         // First, get the distinct callstacks
         List<CallStackDepth> csList = new ArrayList<>();
         synchronized (fIdToCallstack) {
@@ -303,20 +303,25 @@ public class FlameChartDataProvider extends AbstractTmfTraceDataProvider impleme
             Long destId = findEntry(callstacks, receiverThread, transaction.getTime());
 
             System.out.println(transaction);
-            if (transaction.isSelfTransaction()) {
-              Map<String, Object> s= new  HashMap<>();
-              if ("USDC".equals(transaction.getType())) {
-                  s.put("color", "#FF0000");
 
-              } else {
-                  s.put("color", "#00FF00");
+            if (sourceId!= null && destId != null) {
 
-              }
-              OutputElementStyle style = new OutputElementStyle(null, s);
-                a.add(new TransactionArrow(sourceId-1, destId+1, transaction.getTime() + 300000l, -600000l, transaction.getAmount(), style, transaction.getType(), transaction.getTokenName()));
-            } else {
-                a.add(new TransactionArrow(sourceId, destId, transaction.getTime(), 0l, transaction.getAmount(), transaction.getType(), transaction.getTokenName()));
+                if (transaction.isSelfTransaction()) {
+                    Map<String, Object> s= new  HashMap<>();
+                    if ("USDC".equals(transaction.getType())) {
+                        s.put("color", "#FF0000");
+
+                    } else {
+                        s.put("color", "#00FF00");
+
+                    }
+                    OutputElementStyle style = new OutputElementStyle(null, s);
+                    a.add(new TransactionArrow(sourceId-1, destId+1, transaction.getTime() + 300000l, -600000l, transaction.getAmount(), style, transaction.getType(), transaction.getTokenName()));
+                } else {
+                    a.add(new TransactionArrow(sourceId, destId, transaction.getTime(), 0l, transaction.getAmount(), transaction.getType(), transaction.getTokenName()));
+                }
             }
+
         }
 
         return new TmfModelResponse<>(a, Status.COMPLETED, CommonStatusMessage.COMPLETED);

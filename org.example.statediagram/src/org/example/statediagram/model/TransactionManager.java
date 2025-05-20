@@ -52,16 +52,7 @@ public class TransactionManager {
 		System.out.println(eventField);
 		long time = Long.parseLong(eventField.getField("ts").getFormattedValue());
 		int receiver = Integer.parseInt(eventField.getField("tid").getFormattedValue());
-		String amount = eventField.getField("args/amount").getFormattedValue();
-		long a;
-		if (amount.startsWith("0x") || amount.startsWith("0X")) {
-		    amount = amount.substring(2);
-		    a = Long.parseLong(amount,16);
-		    
-		} else {
-			 a = Long.parseLong(amount);
-		}
-		
+		String amount = eventField.getField("args/amount").getFormattedValue();		
 		String type = eventField.getField("args/token_symbol").getFormattedValue();	
 		String tokenName = eventField.getField("args/token_name").getFormattedValue();	
 		System.out.println("DEBUG :" + tokenName);
@@ -69,9 +60,7 @@ public class TransactionManager {
 		if ("ETH".equals(type)) {
 			sender--;
 		}
-		
-		
-		fTraceTransactions.computeIfAbsent(trace, k -> new ArrayList<>()).add(new Transaction(sender, receiver, time, a, type, tokenName));
+		fTraceTransactions.computeIfAbsent(trace, k -> new ArrayList<>()).add(new Transaction(sender, receiver, time, amount, type, tokenName));
 	}
 	
 	

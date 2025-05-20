@@ -8,25 +8,29 @@ public class TransactionArrow extends TimeGraphArrow implements ITimeGraphArrow{
 
 	private String fType;
 	private String fTokenName;
+	private String fAmount;
 	
 
 	
-	public TransactionArrow(long sourceId, long destinationId, long time, long duration, long amount) {
-		super(sourceId, destinationId, time, duration, amount);
+	public TransactionArrow(long sourceId, long destinationId, long time, long duration, String amount) {
+		super(sourceId, destinationId, time, duration);
+		fAmount = amount;
 	}
-	public TransactionArrow(long sourceId, long destinationId, long time, long duration, long amount,  String type, String tokenName) {
-		super(sourceId, destinationId, time, duration, amount);
+	public TransactionArrow(long sourceId, long destinationId, long time, long duration, String amount,  String type, String tokenName) {
+		super(sourceId, destinationId, time, duration);
 		fType = type;
 		fTokenName = tokenName;
+		fAmount = amount;
 	}
-	public TransactionArrow(long sourceId, long destinationId, long time, long duration, long amount, OutputElementStyle style)  {
-		super(sourceId, destinationId, time, duration, amount, style);
+	public TransactionArrow(long sourceId, long destinationId, long time, long duration, String amount, OutputElementStyle style)  {
+		super(sourceId, destinationId, time, duration, style);
 	}
 	
-	public TransactionArrow(long sourceId, long destinationId, long time, long duration, long amount, OutputElementStyle style , String type, String tokenName)  {
-		super(sourceId, destinationId, time, duration, amount, style);
+	public TransactionArrow(long sourceId, long destinationId, long time, long duration, String amount, OutputElementStyle style , String type, String tokenName)  {
+		super(sourceId, destinationId, time, duration, style);
 		fType = type;
 		fTokenName = tokenName;
+		fAmount = amount;
 	}
 
 	public boolean isSelfTransaction() {
@@ -37,6 +41,9 @@ public class TransactionArrow extends TimeGraphArrow implements ITimeGraphArrow{
 	}
 	public String getTokenName() {
 		return fTokenName;
+	}
+	public String getAmount() {
+		return fAmount;
 	}
 	
 	@Override

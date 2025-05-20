@@ -75,7 +75,7 @@ public class TimeEvent implements ITimeEvent {
      * @param value
      *            The status assigned to the event
      */
-    public TimeEvent(ITimeGraphEntry entry, long time, long duration, long value) {
+    public TimeEvent(ITimeGraphEntry entry, long time, long duration, int value) {
         this(entry, new TimeGraphState(time, duration, value));
     }
 
@@ -96,7 +96,7 @@ public class TimeEvent implements ITimeEvent {
      *            can be found in {@link CoreFilterProperty}.
      * @since 4.0
      */
-    public TimeEvent(ITimeGraphEntry entry, long time, long duration, long value, int activeProperties) {
+    public TimeEvent(ITimeGraphEntry entry, long time, long duration, int value, int activeProperties) {
         this(entry, new TimeGraphState(time, duration, value));
         fModel.setActiveProperties(activeProperties);
     }
@@ -122,7 +122,7 @@ public class TimeEvent implements ITimeEvent {
      *
      * @return The integer matching this status
      */
-    public long getValue() {
+    public int getValue() {
         return fModel.getValue();
     }
 
