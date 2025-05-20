@@ -4,7 +4,7 @@
    <extension
          point="org.eclipse.ui.views">
       <view
-            name="State Diagram"
+            name="State Changes"
             icon="icons/sample.png"
             category="org.example"
             class="org.example.statediagram.views.StateDiagramView"
