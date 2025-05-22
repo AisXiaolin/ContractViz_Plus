@@ -6,7 +6,7 @@
       <view
             name="State Changes"
             icon="icons/sample.png"
-            category="org.example"
+            category="org.eclipse.linuxtools.tmf.ui.views.category"
             class="org.example.statediagram.views.StateDiagramView"
             id="org.example.statediagram.views.statediagramview">
       </view>

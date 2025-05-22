@@ -20,6 +20,10 @@
       %license
    </license>
 
+   <includes
+         id="org.eclipse.zest.sdk"
+         version="0.0.0"/>
+
    <requires>
       <import feature="org.eclipse.e4.rcp" version="0.0.0" match="greaterOrEqual"/>
       <import feature="org.eclipse.equinox.p2.core.feature" version="0.0.0" match="greaterOrEqual"/>
@@ -463,6 +467,10 @@
 
    <plugin
          id="org.eclipse.tracecompass.trace-event-logger"
+         version="0.0.0"/>
+
+   <plugin
+         id="org.example.statediagram"
          version="0.0.0"/>
 
 </feature>

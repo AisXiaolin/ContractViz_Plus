@@ -47,6 +47,7 @@ SPDX-License-Identifier: EPL-2.0
       </win>
    </launcher>
 
+
    <vm>
       <linux include="false">org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-17</linux>
       <macos include="false">org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-17</macos>
@@ -112,8 +113,6 @@ Java and all Java-based trademarks are trademarks of Oracle Corporation in the U
    </license>
 
    <plugins>
-      <plugin id="org.eclipse.tracecompass.incubator.traceevent.core"/>
-      <plugin id="org.eclipse.tracecompass.incubator.traceevent.ui"/>
       <plugin id="org.example.statediagram"/>
    </plugins>
 
@@ -149,7 +148,7 @@ Java and all Java-based trademarks are trademarks of Oracle Corporation in the U
       <feature id="org.eclipse.tracecompass.tmf.cli"/>
       <feature id="org.eclipse.equinox.executable"/>
       <feature id="org.eclipse.justj.openjdk.hotspot.jre.minimal.stripped" installMode="root"/>
-      <feature id="org.eclipse.tracecompass.incubator.traceevent" installMode="root"/>
+      <feature id="org.eclipse.zest.sdk" installMode="root"/>
    </features>
 
    <configurations>
@@ -161,6 +160,7 @@ Java and all Java-based trademarks are trademarks of Oracle Corporation in the U
       <plugin id="org.eclipse.equinox.simpleconfigurator" autoStart="true" startLevel="1" />
       <plugin id="org.eclipse.tracecompass.rcp.ui" autoStart="false" startLevel="5" />
       <plugin id="org.eclipse.update.configurator" autoStart="true" startLevel="3" />
+      <plugin id="org.example.statediagram" autoStart="false" startLevel="4" />
    </configurations>
 
    <repositories>
