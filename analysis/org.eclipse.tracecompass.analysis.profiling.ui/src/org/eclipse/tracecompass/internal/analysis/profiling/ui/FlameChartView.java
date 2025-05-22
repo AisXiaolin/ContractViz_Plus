@@ -76,6 +76,7 @@ import org.eclipse.tracecompass.tmf.ui.symbols.SymbolProviderConfigDialog;
 import org.eclipse.tracecompass.tmf.ui.symbols.TmfSymbolProviderUpdatedSignal;
 import org.eclipse.tracecompass.tmf.ui.views.TmfViewFactory;
 import org.eclipse.tracecompass.tmf.ui.views.timegraph.BaseDataProviderTimeGraphView;
+import org.eclipse.tracecompass.tmf.ui.views.uml2sd.core.Metrics;
 //import org.eclipse.tracecompass.tmf.ui.widgets.timegraph.TimeGraphBookmarkEvent;
 import org.eclipse.tracecompass.tmf.ui.widgets.timegraph.TimeGraphPresentationProvider;
 import org.eclipse.tracecompass.tmf.ui.widgets.timegraph.TimeGraphViewer;
@@ -271,6 +272,7 @@ public class FlameChartView extends BaseDataProviderTimeGraphView {
         setEntryComparator(new CallStackComparator());
         setFilterColumns(FILTER_COLUMN_NAMES);
         setFilterLabelProvider(new CallStackTreeLabelProvider());
+        Metrics.setForcedEventSpacing(100);
         TmfSignalManager.register(this);
     }
 

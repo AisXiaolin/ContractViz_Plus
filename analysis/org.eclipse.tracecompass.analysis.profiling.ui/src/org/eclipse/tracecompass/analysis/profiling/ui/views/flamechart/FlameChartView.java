@@ -46,7 +46,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.tracecompass.internal.analysis.profiling.core.callstack.provider.CallStackDataProvider;
 import org.eclipse.tracecompass.internal.analysis.profiling.core.callstack.provider.CallStackEntryModel;
-import org.eclipse.tracecompass.internal.analysis.profiling.core.instrumented.FlameChartDataProvider;
+//import org.eclipse.tracecompass.internal.analysis.profiling.core.instrumented.FlameChartDataProvider;
 import org.eclipse.tracecompass.internal.analysis.profiling.ui.Activator;
 import org.eclipse.tracecompass.internal.analysis.profiling.ui.views.flamechart.Messages;
 import org.eclipse.tracecompass.internal.provisional.tmf.ui.widgets.timegraph.BaseDataProviderTimeGraphPresentationProvider;
@@ -90,7 +90,7 @@ import org.eclipse.tracecompass.tmf.ui.widgets.timegraph.widgets.Utils;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchActionConstants;
 import org.example.statediagram.signal.NodeSelectedSignal;
-import org.example.statediagram.model.State;
+//import org.example.statediagram.model.State;
 
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
@@ -798,10 +798,14 @@ public class FlameChartView extends BaseDataProviderTimeGraphView {
         }
     }
 
+    /**
+     * @since 4.3
+     */
     @TmfSignalHandler
     public void elementSelected(NodeSelectedSignal signal) {
         System.out.println("wwwwwwwwwwww");
-        State state = signal.getState();
+        signal.getClass();
+       // State state = signal.getState();
 //        @NonNull
 //        FlameChartDataProvider provider = (FlameChartDataProvider) DataProviderManager.getInstance().fetchExistingDataProvider(getTrace(), getProviderId(), ITimeGraphDataProvider.class);
 //        provider.stateSelected(state);

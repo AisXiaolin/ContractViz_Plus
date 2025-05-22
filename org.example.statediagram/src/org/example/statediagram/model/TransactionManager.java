@@ -49,7 +49,7 @@ public class TransactionManager {
 	
 
 	public void addTransaction(ITmfTrace trace, ITmfEventField eventField) {
-		System.out.println(eventField);
+//		System.out.println(eventField);
 	    ITmfEventField tsField = eventField.getField("ts");  
 	    long time = (tsField != null) ? Long.parseLong(tsField.getFormattedValue()) : 0;  
 	      
@@ -57,7 +57,7 @@ public class TransactionManager {
 	    int receiver = (tidField != null) ? Integer.parseInt(tidField.getFormattedValue()) : 0;  
 	      
 	    ITmfEventField amountField = eventField.getField("args/amount");  
-	    String amount = (amountField != null) ? amountField.getFormattedValue() : "";  
+	    String amount = (amountField != null) ? amountField.getFormattedValue() : "	";  
 	      
 	    ITmfEventField tokenSymbolField = eventField.getField("args/token_symbol");  
 	    String type = (tokenSymbolField != null) ? tokenSymbolField.getFormattedValue() : "";  
@@ -94,6 +94,7 @@ public class TransactionManager {
         while ((event = trace.getNext(ctx)) != null) {
             ITmfEventField content = event.getContent();
             ITmfEventField argsField = content.getField("args/amount");
+            System.out.println(content);
             if (argsField != null) {
             	addTransaction(trace, content);
             }

@@ -201,7 +201,7 @@ public class TmfPieChart extends Chart {
 
     private static final String FONT = "Arial"; //$NON-NLS-1$
     // Current colors should be odd in order to alternate in the palette
-    private static final int NUM_COLORS = 23;
+    //private static final int NUM_COLORS = 23;
 
     //private static final IPaletteProvider PALETTE = new QualitativePaletteProvider.Builder().setNbColors(NUM_COLORS).build();
     private static final CustomColorPaletteProvider PALETTE = CustomColorPaletteProvider.INSTANCE;
