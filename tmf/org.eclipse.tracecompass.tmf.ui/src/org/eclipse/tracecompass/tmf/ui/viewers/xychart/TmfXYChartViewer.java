@@ -210,7 +210,7 @@ public abstract class TmfXYChartViewer extends TmfTimeViewer implements ITmfChar
 
         xAxis.getTick().setVisible(false);
         yAxis.getTick().setForeground(fColorScheme.getColor(TimeGraphColorScheme.TOOL_FOREGROUND));
-        initTitle("Gas", yAxis.getTitle());
+        initTitle("Gas used", yAxis.getTitle());
 
         fMouseSelectionProvider = new TmfMouseSelectionProvider(this);
         fMouseDragZoomProvider = new TmfMouseDragZoomProvider(this);
