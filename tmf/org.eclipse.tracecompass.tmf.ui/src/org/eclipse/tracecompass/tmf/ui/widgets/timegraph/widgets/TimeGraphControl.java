@@ -93,8 +93,6 @@ import org.eclipse.tracecompass.common.core.log.TraceCompassLog;
 import org.eclipse.tracecompass.common.core.math.SaturatedArithmetic;
 import org.eclipse.tracecompass.internal.provisional.tmf.ui.model.IStylePresentationProvider;
 import org.eclipse.tracecompass.internal.provisional.tmf.ui.widgets.timegraph.ITimeGraphStylePresentationProvider;
-import org.eclipse.tracecompass.internal.tmf.ui.Activator;
-import org.eclipse.tracecompass.internal.tmf.ui.ITmfUIPreferences;
 import org.eclipse.tracecompass.internal.tmf.ui.util.LineClipper;
 import org.eclipse.tracecompass.internal.tmf.ui.util.SymbolHelper;
 import org.eclipse.tracecompass.internal.tmf.ui.widgets.timegraph.TimeGraphRender;
@@ -141,6 +139,8 @@ import org.eclipse.tracecompass.tmf.ui.widgets.timegraph.model.MarkerEvent;
 import org.eclipse.tracecompass.tmf.ui.widgets.timegraph.model.TimeGraphEntry;
 import org.eclipse.tracecompass.traceeventlogger.LogUtils;
 import org.eclipse.tracecompass.traceeventlogger.LogUtils.ScopeLog;
+import org.example.statediagram.model.TransactionManager;
+
 import com.google.common.collect.Iterables;
 
 /**
@@ -213,7 +213,7 @@ public class TimeGraphControl extends TimeGraphBaseControl
 
     private static final String PREFERRED_WIDTH = "width"; //$NON-NLS-1$
 
-    private static final int LINE_SPACING = 0;
+    private static final int LINE_SPACING = 5;
 
     /**
      * The alpha color component value for dimmed events
@@ -1791,7 +1791,7 @@ public class TimeGraphControl extends TimeGraphBaseControl
             size = Objects.requireNonNull(super.getSize());
             fSize = size;
         }
-        return new Point(size.x, size.y);
+        return new Point(size.x, size.y-TransactionManager.getInstance().getDepth()*LINE_SPACING);
     }
 
     @Override
@@ -4075,11 +4075,11 @@ public class TimeGraphControl extends TimeGraphBaseControl
                 refreshExpanded(expandedItemList, item);
             }
 
-            if (Activator.getDefault().getPreferenceStore().getBoolean(ITmfUIPreferences.FILTER_EMPTY_ROWS) ? hasSavedFilters() : isHideEmptyRowsFilterActive()) {
-                filterData(expandedItemList);
-            }
+//            if (Activator.getDefault().getPreferenceStore().getBoolean(ITmfUIPreferences.FILTER_EMPTY_ROWS) ? hasSavedFilters() : isHideEmptyRowsFilterActive()) {
+//                filterData(expandedItemList);
+//            }
 
-//            filterData(expandedItemList);
+            filterData(expandedItemList);
 
 
             fExpandedItems = expandedItemList.toArray(new Item[0]);
