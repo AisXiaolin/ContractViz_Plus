@@ -1,6 +1,7 @@
 package org.example.statediagram;
 
 import org.eclipse.ui.plugin.AbstractUIPlugin;
+import org.example.statediagram.model.TransactionManager;
 import org.osgi.framework.BundleContext;
 
 /**
@@ -18,6 +19,8 @@ public class Activator extends AbstractUIPlugin {
 	 * The constructor
 	 */
 	public Activator() {
+		TransactionManager.getInstance();
+
 	}
 
 	@Override
@@ -29,6 +32,7 @@ public class Activator extends AbstractUIPlugin {
 	@Override
 	public void stop(BundleContext context) throws Exception {
 		plugin = null;
+		TransactionManager.dispose();
 		super.stop(context);
 	}
 
