@@ -147,7 +147,7 @@ public class TransactionManager {
         fTraceFunctions.put(trace, finalFunctions);
         
         StringBuilder pathBuilder = new StringBuilder();
-		pathBuilder.append("/home/alexandre/Documents/storage/outputs/");
+		pathBuilder.append("./addFiles/");
 		pathBuilder.append(trace.getName().substring(0, trace.getName().length()-5));
 		pathBuilder.append("_storage_report.json");
 		
