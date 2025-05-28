@@ -378,7 +378,6 @@ public class TimeGraphTooltipHandler extends TmfAbstractToolTipHandler {
         ITimeElement arrow = ((TimeEvent)linkEvent).getModel();
         if (arrow instanceof TransactionArrow) {
             TransactionArrow transactionArrow = (TransactionArrow) arrow;
-            System.out.println(transactionArrow);
 
             addItem("Amount", transactionArrow.getAmount());
             addItem("Token Name", transactionArrow.getTokenName());

@@ -199,83 +199,11 @@ public class FlameChartDataProvider extends AbstractTmfTraceDataProvider impleme
 
     @Override
     public TmfModelResponse<List<ITimeGraphArrow>> fetchArrows(Map<String, Object> fetchParameters, @Nullable IProgressMonitor monitor) {
-        //List<ITmfStateInterval> arrows = fArrowProvider.fetchArrows(fetchParameters, monitor);
         if (monitor != null && monitor.isCanceled()) {
             return new TmfModelResponse<>(null, Status.CANCELLED, CommonStatusMessage.TASK_CANCELLED);
         }
 
 
-        /*if (arrows.isEmpty()) {
-            List<ITimeGraphArrow> a = new ArrayList<>();
-            TransactionManager transactionManager = TransactionManager.getInstance();
-            List<Transaction> transactions = transactionManager.getTransactions();
-            for (Transaction transaction : transactions) {
-
-                HostThread senderThread = new HostThread(trace.getHostId(), transaction.getSender());
-                HostThread receiverThread = new HostThread(trace.getHostId(), transaction.getReceiver());
-
-                Long sourceId = findEntry(getCallStacks(), senderThread, transaction.getTime());
-                Long destId = findEntry(getCallStacks(), receiverThread, transaction.getTime());
-
-                System.out.println(transaction);
-                a.add(new TimeGraphArrow(transaction.getSender(), transaction.getReceiver(), transaction.getTime(), 0, transaction.getAmount()));
-            }
-//            Map<String, Object> s= new  HashMap<>();
-//            s.put("color", "#FF0000");
-//            OutputElementStyle style = new OutputElementStyle(null, s);
-//
-//            a.add(new TimeGraphArrow(3, 6, 1644206199000l, 0, 100000));
-//            a.add(new TimeGraphArrow(8, 10, 1644207199000l + 300000l, -600000l, 100000, style));
-
-/*            System.out.println( "\n \n\nTEST\n"+TmfTraceManager.getInstance().getOpenedTraces());
-            ITmfTrace trace = TmfTraceManager.getInstance().getOpenedTraces().iterator().next();
-            ITmfContext ctx = trace.seekEvent(0); // Commencer depuis le début
-            ITmfEvent event;
-
-            while ((event = trace.getNext(ctx)) != null) {
-                ITmfEventField content = event.getContent();
-
-                // Récupérer le champ "args"
-                ITmfEventField argsField = content.getField("args/from");
-
-                if (argsField != null) {
-                    for (@NonNull ITmfEventField arg : content.getFields()) {
-                        String key = arg.getName();
-                        Object value = arg.getValue();
-                        //System.out.println("arg: " + key + " = " + value);
-                        if ("args/test".equals(key)) {
-
-
-                            HashMap<String, String> map = new HashMap<String, String>();
-                            JSONObject jObject = new JSONObject((String)value);
-
-                            System.out.println("value : "+value);
-                            System.out.println("json : "+jObject);
-
-                            Iterator<?> keys = jObject.keys();
-
-                            while( keys.hasNext() ){
-                                String key2 = (String)keys.next();
-                                String value2 = jObject.getString(key2);
-                                map.put(key2, value2);
-
-                            }
-
-                            System.out.println("map : "+map);
-
-
-
-
-                        }
-                    }
-                }
-            }
-
-
-            return new TmfModelResponse<>(a, Status.COMPLETED, CommonStatusMessage.COMPLETED);
-//            return new TmfModelResponse<>(Collections.emptyList(), Status.COMPLETED, CommonStatusMessage.COMPLETED);
-        }*/
-        //List<ITimeGraphArrow> tgArrows = new ArrayList<>();
         // First, get the distinct callstacks
         List<CallStackDepth> csList = new ArrayList<>();
         synchronized (fIdToCallstack) {
@@ -302,8 +230,6 @@ public class FlameChartDataProvider extends AbstractTmfTraceDataProvider impleme
             Long sourceId = findEntry(callstacks, senderThread, transaction.getTime());
             Long destId = findEntry(callstacks, receiverThread, transaction.getTime());
 
-            System.out.println(transaction);
-
             if (sourceId!= null && destId != null) {
 
                 if (transaction.isSelfTransaction()) {
@@ -311,12 +237,16 @@ public class FlameChartDataProvider extends AbstractTmfTraceDataProvider impleme
                     if ("USDC".equals(transaction.getType())) {
                         s.put("color", "#FF0000");
 
-                    } else {
+                    } else if ("WETH".equals(transaction.getType())) {
                         s.put("color", "#00FF00");
+
+                    } else {
+                        s.put("color", "#000000");
 
                     }
                     OutputElementStyle style = new OutputElementStyle(null, s);
-                    a.add(new TransactionArrow(sourceId-1, destId+1, transaction.getTime() + 300000l, -600000l, transaction.getAmount(), style, transaction.getType(), transaction.getTokenName()));
+                    long sizeArrow = transactionManager.getSizeArrow();
+                    a.add(new TransactionArrow(sourceId-1, destId+1, transaction.getTime() + sizeArrow, -2*sizeArrow, transaction.getAmount(), style, transaction.getType(), transaction.getTokenName()));
                 } else {
                     a.add(new TransactionArrow(sourceId, destId, transaction.getTime(), 0l, transaction.getAmount(), transaction.getType(), transaction.getTokenName()));
                 }
@@ -326,34 +256,6 @@ public class FlameChartDataProvider extends AbstractTmfTraceDataProvider impleme
 
         return new TmfModelResponse<>(a, Status.COMPLETED, CommonStatusMessage.COMPLETED);
 
-//
-//        // Find the source and destination entry for each arrow
-//        for (ITmfStateInterval interval : arrows) {
-//
-//            if (monitor != null && monitor.isCanceled()) {
-//
-//                return new TmfModelResponse<>(null, Status.CANCELLED, CommonStatusMessage.TASK_CANCELLED);
-//            }
-//            EdgeStateValue edge = (EdgeStateValue) interval.getValue();
-//            if (edge == null) {
-//                /*
-//                 * by contract all the intervals should have EdgeStateValues but
-//                 * need to check to avoid NPE
-//                 */
-//
-//                continue;
-//            }
-//
-//            Long src = findEntry(callstacks, edge.getSource(), interval.getStartTime());
-//            Long dst = findEntry(callstacks, edge.getDestination(), interval.getEndTime() + 1);
-//
-//            if (src != null && dst != null) {
-//                long duration = interval.getEndTime() - interval.getStartTime() + 1;
-//                tgArrows.add(new TimeGraphArrow(src, dst, interval.getStartTime(), duration, edge.getId()));
-//            }
-//        }
-//
-//        return new TmfModelResponse<>(tgArrows, Status.COMPLETED, CommonStatusMessage.COMPLETED);
     }
 
 
