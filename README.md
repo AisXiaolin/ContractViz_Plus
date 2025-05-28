@@ -6,10 +6,63 @@ Given cryptokitty transaction as the example
 4. attach_money_flows.py is attaching the money flow result generate by money_flow_analyzer.py
 5. to_trace_event.py is converting the result to the trace event format
 6. to_trace_event_with_timestamps.py is inserting the timestamps
-   
-# ContractViz Plus - Build and Run Instructions
 
-This project allows you to build and run ContractViz Plus, a smart contract analysis environment.
+
+
+
+# ContractViz + Setup
+
+## How to Launch the Software
+You can either use the prebuilt executable or compile the software before running it.
+
+To run Trace Compass on Linux, use the following command:
+
+```bash
+./tracecompass
+```
+### Notes:
+
+* Ensure the file is executable. If not, you can make it executable with:
+
+  ```bash
+  chmod +x ./tracecompass
+  ```
+
+## Installing the Trace Event Parser Plugin
+
+Once the application is running:
+
+1. Go to the top menu.
+2. Navigate to `Tools` > `Add-ons`.
+3. Add the `Trace Event Parser` plugin from the list.
+
+## Adding the Gas Usage View
+
+To add the gas usage analysis view:
+
+1. In the **Project Explorer**, right-click on `Traces`.
+2. Select `Manage XML Analyses`.
+3. In the window that appears, click the `Import` button.
+4. Select the file `gas_cost_per_function.xml` located in the `addFiles` directory.
+
+## Opening a Trace
+
+1. Open the trace file named `???.json` from the `addFiles` directory.
+2. Ensure that the corresponding `???_storage_report.json` file is also present in the `addFiles` directory. It is needed for the state changes.
+
+These two files must be in the addFiles directory for the analysis to work properly.
+
+---
+
+
+
+
+
+
+   
+# ContractViz + - Build and Run Instructions
+
+You can also build ContractViz +.
 
 ## Prerequisites
 
