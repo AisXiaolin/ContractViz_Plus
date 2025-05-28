@@ -5,33 +5,39 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+
 import org.eclipse.tracecompass.tmf.core.event.ITmfEvent;
 import org.eclipse.tracecompass.tmf.core.event.ITmfEventField;
 import org.eclipse.tracecompass.tmf.core.signal.TmfSignalHandler;
 import org.eclipse.tracecompass.tmf.core.signal.TmfSignalManager;
 import org.eclipse.tracecompass.tmf.core.signal.TmfTraceClosedSignal;
 import org.eclipse.tracecompass.tmf.core.signal.TmfTraceOpenedSignal;
+import org.eclipse.tracecompass.tmf.core.signal.TmfTraceSelectedSignal;
+import org.eclipse.tracecompass.tmf.core.signal.TmfWindowRangeUpdatedSignal;
+import org.eclipse.tracecompass.tmf.core.timestamp.TmfTimeRange;
 import org.eclipse.tracecompass.tmf.core.trace.ITmfContext;
 import org.eclipse.tracecompass.tmf.core.trace.ITmfTrace;
+import org.eclipse.tracecompass.tmf.core.trace.TmfTraceManager;
 
 public class TransactionManager {
 	
 	private static TransactionManager fInstance = null;
 	private Map<ITmfTrace, List<Transaction>> fTraceTransactions = new HashMap<>();  
-	private List<Transaction> fTransactions;
+	private Map<ITmfTrace, List<Function>> fTraceFunctions = new HashMap<>();
 	private Map<ITmfTrace, Map<Integer, Long>> fFunctionToEntryIdMap = new HashMap<>();
+	private ITmfTrace fCurrentTrace;
+	private long fSizeArrow;
+	private Map<ITmfTrace, Integer> fDepth = new HashMap<>();
 
 	private TransactionManager() {
-		fTransactions = new ArrayList<>();
-        TmfSignalManager.registerVIP(this);
-         
+		fCurrentTrace = TmfTraceManager.getInstance().getActiveTrace();
+        TmfSignalManager.registerVIP(this);         
 	}
 	
 	public static synchronized void dispose() {  
 	    TransactionManager manager = fInstance;  
 	    if (manager != null) {  
 	        TmfSignalManager.deregister(manager);  
-	        manager.fTransactions.clear();  
 	    }  
 	    fInstance = null;  
 	}
@@ -47,9 +53,19 @@ public class TransactionManager {
 		return fTraceTransactions.getOrDefault(trace, new ArrayList<Transaction>());
 	}
 	
+	public List<Function> getFunctions() {
+		return fTraceFunctions.getOrDefault(fCurrentTrace, new ArrayList<Function>());
+	}
+	
+	public long getSizeArrow() {
+		return fSizeArrow;
+	}
 
+	public int getDepth() {
+		return (int) ((int) fDepth.getOrDefault(fCurrentTrace, 0)*1.7);
+	}
+	
 	public void addTransaction(ITmfTrace trace, ITmfEventField eventField) {
-//		System.out.println(eventField);
 	    ITmfEventField tsField = eventField.getField("ts");  
 	    long time = (tsField != null) ? Long.parseLong(tsField.getFormattedValue()) : 0;  
 	      
@@ -86,19 +102,61 @@ public class TransactionManager {
     public synchronized void traceOpened(TmfTraceOpenedSignal signal) { 
 		System.out.println("Signal received : " + signal);
 		ITmfTrace trace = signal.getTrace();
-		
-		
+		fCurrentTrace = trace;
 		ITmfContext ctx = trace.seekEvent(0); 
-        ITmfEvent event;
+		
 
+        ITmfEvent event;
+        
+        Map<Integer, List<Function>> functions = new HashMap<>();
+        int index = 0;
+        
+        
         while ((event = trace.getNext(ctx)) != null) {
             ITmfEventField content = event.getContent();
+            
+            if("B".equals( content.getField("ph").getFormattedValue())) {
+            	functions
+	                .computeIfAbsent(Integer.parseInt(content.getField("tid").getFormattedValue()), k -> new ArrayList<>())
+	                .add(new Function(index++, Long.parseLong(content.getField("ts").getFormattedValue())));
+            } else if("E".equals( content.getField("ph").getFormattedValue())) {
+            	List<Function> fs = functions
+            		.computeIfAbsent(Integer.parseInt(content.getField("tid").getFormattedValue()), k -> new ArrayList<>());
+            	fs.get(fs.size()-1).setEndTime(Long.parseLong(content.getField("ts").getFormattedValue()));
+            }
+            
             ITmfEventField argsField = content.getField("args/amount");
-            System.out.println(content);
             if (argsField != null) {
             	addTransaction(trace, content);
             }
         }
+        
+        Map<Integer, Function> tmp = new HashMap<>();
+        for (List<Function> functionList :functions.values()) {
+        	for (Function function : functionList) {
+        		tmp.put(function.getIndex(), function);
+        	}
+        }
+        
+        fDepth.put(fCurrentTrace, functions.size());
+        
+        List<Function> finalFunctions = new ArrayList<>();
+        for (int i = 0; i < tmp.size(); i++) {
+        	finalFunctions.add(tmp.get(i));
+        }
+        fTraceFunctions.put(trace, finalFunctions);
+        
+        StringBuilder pathBuilder = new StringBuilder();
+		pathBuilder.append("/home/alexandre/Documents/storage/outputs/");
+		pathBuilder.append(trace.getName().substring(0, trace.getName().length()-5));
+		pathBuilder.append("_storage_report.json");
+		
+		
+        TransactionParser.parseTransactions(fCurrentTrace, pathBuilder.toString());
+        fSizeArrow = fCurrentTrace.getEndTime().getValue() - fCurrentTrace.getStartTime().getValue();
+		fSizeArrow /= 50;
+        
+        
 	}
 	
 	@TmfSignalHandler  
@@ -106,5 +164,52 @@ public class TransactionManager {
 		System.out.println("Signal received : " + signal);
         ITmfTrace trace = signal.getTrace();  
         fTraceTransactions.get(trace).clear();
+        fTraceFunctions.get(trace).clear();
+        StateMachineManager.getInstance().clear(trace);
     }  
+	
+	@TmfSignalHandler  
+	public void traceSelected(TmfTraceSelectedSignal signal) {		
+		ITmfTrace trace = signal.getTrace();
+		
+		if (trace == fCurrentTrace) {
+			return;
+		}
+		
+		
+		fCurrentTrace = trace;
+		fSizeArrow = fCurrentTrace.getEndTime().getValue() - fCurrentTrace.getStartTime().getValue();
+		fSizeArrow /= 50;
+
+//	    Display.getDefault().asyncExec(() -> {  
+//	        IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();  
+//	        if (window != null) {  
+//	            IWorkbenchPage activePage = window.getActivePage();  
+//	            if (activePage != null) {  
+//	                try {  	                	
+//	                	
+//	                    IViewPart viewPart = activePage.showView("org.eclipse.tracecompass.analysis.profiling.ui.flamechart:org.eclipse.tracecompass.incubator.traceevent.analysis.callstack",   
+//	                                      null, IWorkbenchPage.VIEW_ACTIVATE);  
+//	                    activePage.showView("org.example.statediagram.views.statediagramview",   
+//                                null, IWorkbenchPage.VIEW_ACTIVATE);  
+//	                    activePage.showView("org.eclipse.linuxtools.tmf.ui.views.statistics",   
+//                                null, IWorkbenchPage.VIEW_ACTIVATE); 
+//	                    
+//	                    TmfSignalManager.dispatchSignal(new TmfTraceSelectedSignal(this, trace));  
+//	                    
+//	                } catch (PartInitException e) {  
+//	                    // Gérer l'erreur  
+//	                }  
+//	            }  
+//	        }  
+//	    });  
+	}
+	
+	@TmfSignalHandler  
+	public void intervalChanged(TmfWindowRangeUpdatedSignal signal) {		
+		TmfTimeRange range = signal.getCurrentRange();
+		fSizeArrow = range.getEndTime().getValue() - range.getStartTime().getValue();
+		fSizeArrow /= 50;
+	}
+		
 }
