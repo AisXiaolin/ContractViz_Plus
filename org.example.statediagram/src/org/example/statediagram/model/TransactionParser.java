@@ -7,6 +7,8 @@ import java.nio.file.Paths;
 import java.util.List;
 
 import org.eclipse.swt.graphics.Color;
+import org.eclipse.tracecompass.tmf.core.CustomColorPaletteProvider;
+import org.eclipse.tracecompass.tmf.core.presentation.RGBAColor;
 import org.eclipse.tracecompass.tmf.core.trace.ITmfTrace;
 import org.json.*;
 
@@ -34,9 +36,9 @@ public class TransactionParser {
 				List<State> states = graph.getStates();
 				
 				Function function = functions.get(node.getInt("node_idx"));
-				
-				
-				State state = new State(shorten( node.getString("key")), new Color(245, 156, 154), function.getStartTime(), function.getEndTime());
+				CustomColorPaletteProvider colorPaletteProvider = CustomColorPaletteProvider.INSTANCE;
+				RGBAColor color = colorPaletteProvider.getColor((long)node.getInt("step_idx"));
+				State state = new State(shorten( node.getString("key")), new Color(color.getRed(), color.getGreen(), color.getBlue()), function.getStartTime(), function.getEndTime());
 				int transitionIndex = graph.getStates().lastIndexOf(state);
 				if (transitionIndex != -1) {
 					graph.getState(transitionIndex).addTransition(null, state);

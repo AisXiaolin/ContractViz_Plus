@@ -738,7 +738,7 @@ public class FlameChartView extends BaseDataProviderTimeGraphView {
             int red = state.getColor().getRed();
             int green = state.getColor().getGreen();
             int blue = state.getColor().getBlue();
-            RGBA color = new RGBA(red, green, blue, 50); // Rouge
+            RGBA color = new RGBA(red, green, blue, 50);
             IMarkerEvent markerEvent = new MarkerEvent(null, startTime, duration,
                     IMarkerEvent.BOOKMARKS, color, state.getName(), true);
 
