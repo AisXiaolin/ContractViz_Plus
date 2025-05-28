@@ -1,11 +1,10 @@
 package org.example.statediagram.model;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
 public class StateGraph {
-	private final Map<String, State> states = new HashMap<>();
+	private final List<State> states = new ArrayList<>();
     private final String name;
 
     public StateGraph(String name) {
@@ -13,15 +12,16 @@ public class StateGraph {
     }
 
     public void addState(State state) {
-        states.put(state.getName(), state);
+        state.setIndex(states.size());
+    	states.add(state);
     }
 
-    public Collection<State> getStates() {
-        return states.values();
+    public List<State> getStates() {
+        return states;
     }
 
-    public State getState(String name) {
-        return states.get(name);
+    public State getState(int idx) {
+        return states.get(idx);
     }
 
     public String getName() {
