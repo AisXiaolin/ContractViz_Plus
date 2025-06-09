@@ -14,7 +14,12 @@
 
 package org.eclipse.tracecompass.internal.lttng2.kernel.ui.views;
 
+import org.eclipse.tracecompass.internal.analysis.os.linux.ui.views.resources.ResourcesView;
+import org.eclipse.tracecompass.internal.analysis.os.linux.ui.views.controlflow.ControlFlowView;
+import org.eclipse.tracecompass.internal.lttng2.control.ui.views.ControlView;
 import org.eclipse.tracecompass.tmf.ui.project.wizards.NewTmfProjectWizard;
+import org.eclipse.tracecompass.tmf.ui.views.histogram.HistogramView;
+import org.eclipse.tracecompass.tmf.ui.views.statistics.TmfStatisticsView;
 import org.eclipse.ui.IFolderLayout;
 import org.eclipse.ui.IPageLayout;
 import org.eclipse.ui.IPerspectiveFactory;
@@ -27,9 +32,17 @@ public class PerspectiveFactory implements IPerspectiveFactory {
     /** Perspective ID */
     public static final String ID = "org.eclipse.linuxtools.lttng2.kernel.ui.perspective"; //$NON-NLS-1$
 
+    // LTTng views
+    private static final String HISTOGRAM_VIEW_ID = HistogramView.ID;
+    private static final String CONTROL_VIEW_ID = ControlView.ID;
+    private static final String CONTROLFLOW_VIEW_ID = ControlFlowView.ID;
+    private static final String RESOURCES_VIEW_ID = ResourcesView.ID;
+    private static final String STATISTICS_VIEW_ID = TmfStatisticsView.ID;
 
     // Standard Eclipse views
     private static final String PROJECT_VIEW_ID = IPageLayout.ID_PROJECT_EXPLORER;
+    private static final String PROPERTIES_VIEW_ID = IPageLayout.ID_PROP_SHEET;
+    private static final String BOOKMARKS_VIEW_ID = IPageLayout.ID_BOOKMARKS;
 
     @Override
     public void createInitialLayout(IPageLayout layout) {
@@ -40,31 +53,29 @@ public class PerspectiveFactory implements IPerspectiveFactory {
         addViewShortcuts(layout);
         addPerspectiveShortcuts(layout);
 
+        // Create the top left folder
         IFolderLayout topLeftFolder = layout.createFolder(
-                "topLeftFolder", IPageLayout.LEFT, 0.10f, IPageLayout.ID_EDITOR_AREA); //$NON-NLS-1$
+                "topLeftFolder", IPageLayout.LEFT, 0.15f, IPageLayout.ID_EDITOR_AREA); //$NON-NLS-1$
         topLeftFolder.addView(PROJECT_VIEW_ID);
 
+        // Create the bottom left folder
+        IFolderLayout bottomLeftFolder = layout.createFolder(
+                "bottomLeftFolder", IPageLayout.BOTTOM, 0.70f, "topLeftFolder"); //$NON-NLS-1$ //$NON-NLS-2$
+        bottomLeftFolder.addView(CONTROL_VIEW_ID);
 
-        IFolderLayout right = layout.createFolder(
-                "right", IPageLayout.RIGHT, 0.75f, IPageLayout.ID_EDITOR_AREA); //$NON-NLS-1$
-        right.addView("org.eclipse.linuxtools.tmf.ui.views.statistics"); //$NON-NLS-1$
-
-        IFolderLayout bright = layout.createFolder(
-                "bright", IPageLayout.BOTTOM, 0.60f, "right"); //$NON-NLS-1$ //$NON-NLS-2$
-        bright.addView("org.example.statediagram.views.statediagramview"); //$NON-NLS-1$
-
-
+        // Create the top right folder
         IFolderLayout topRightFolder = layout.createFolder(
-                "topRightFolder", IPageLayout.TOP, 0.95f, IPageLayout.ID_EDITOR_AREA); //$NON-NLS-1$
-        topRightFolder.addView("org.eclipse.tracecompass.analysis.profiling.ui.flamechart:org.eclipse.tracecompass.incubator.traceevent.analysis.callstack"); //$NON-NLS-1$
+                "topRightFolder", IPageLayout.TOP, 0.40f, IPageLayout.ID_EDITOR_AREA); //$NON-NLS-1$
+        topRightFolder.addView(RESOURCES_VIEW_ID);
+        topRightFolder.addView(CONTROLFLOW_VIEW_ID);
+        topRightFolder.addView(STATISTICS_VIEW_ID);
 
-
+        // Create the bottom right folder
         IFolderLayout bottomRightFolder = layout.createFolder(
-                "bottomRightFolder", IPageLayout.BOTTOM,0.60f , "topRightFolder"); //$NON-NLS-1$ //$NON-NLS-2$
-
-        bottomRightFolder.addPlaceholder("org.eclipse.linuxtools.internal.tmf.analysis.xml.ui.views.xyview:Ethereum Fee Per Function"); //$NON-NLS-1$
-
-
+                "bottomRightFolder", IPageLayout.BOTTOM, 0.50f, IPageLayout.ID_EDITOR_AREA); //$NON-NLS-1$
+        bottomRightFolder.addView(HISTOGRAM_VIEW_ID);
+        bottomRightFolder.addView(PROPERTIES_VIEW_ID);
+        bottomRightFolder.addView(BOOKMARKS_VIEW_ID);
 
         layout.addNewWizardShortcut(NewTmfProjectWizard.ID);
     }

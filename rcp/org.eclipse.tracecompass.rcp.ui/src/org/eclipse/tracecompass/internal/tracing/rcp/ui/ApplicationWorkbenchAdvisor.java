@@ -60,7 +60,7 @@ public class ApplicationWorkbenchAdvisor extends WorkbenchAdvisor {
     // Constants
     // ------------------------------------------------------------------------
     // The default perspective
-    private static final String PERSPECTIVE_ID = "org.eclipse.linuxtools.tmf.ui.perspective"; //$NON-NLS-1$
+    private static final String PERSPECTIVE_ID = "org.example.statediagram.views.perspective"; //$NON-NLS-1$
 
     private static final String ICONS_PATH = "$nl$/icons/full/"; //$NON-NLS-1$
     private static final String PATH_ELOCALTOOL = ICONS_PATH + "elcl16/"; //$NON-NLS-1$
