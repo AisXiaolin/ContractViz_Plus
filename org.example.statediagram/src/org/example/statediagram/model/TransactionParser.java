@@ -32,11 +32,9 @@ public class TransactionParser {
 			for (int i = 0; i < changesArray.length(); i++) {
 				JSONObject node = changesArray.getJSONObject(i);
 				StateGraph graph = stateMachineManager.getOrCreateGraph(trace, shorten(node.getString("address")));
-				
-				List<State> states = graph.getStates();
-				
+								
 				Function function = functions.get(node.getInt("node_idx"));
-				CustomColorPaletteProvider colorPaletteProvider = CustomColorPaletteProvider.INSTANCE;
+				CustomColorPaletteProvider colorPaletteProvider = CustomColorPaletteProvider.getInstance();
 				RGBAColor color = colorPaletteProvider.getColor((long)node.getInt("step_idx"));
 				State state = new State(shorten( node.getString("key")), new Color(color.getRed(), color.getGreen(), color.getBlue()), function.getStartTime(), function.getEndTime());
 				int transitionIndex = graph.getStates().lastIndexOf(state);

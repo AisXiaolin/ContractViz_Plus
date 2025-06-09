@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.eclipse.jdt.annotation.NonNull;
-//import org.eclipse.tracecompass.analysis.profiling.core.base.FlameDefaultPalette2;
 import org.eclipse.tracecompass.segmentstore.core.ISegment;
 import org.eclipse.tracecompass.tmf.core.event.ITmfEvent;
 import org.eclipse.tracecompass.tmf.core.event.ITmfEventField;
@@ -19,117 +18,108 @@ import org.eclipse.tracecompass.tmf.core.trace.ITmfTrace;
 import org.eclipse.tracecompass.tmf.core.trace.TmfTraceManager;
 
 
+/**
+ *
+ */
 public class CustomColorPaletteProvider implements IPaletteProvider{
 
     /**
-     * Gets an instance of {@link RGBAColor} that represents blue color
+     * Class to manage the colors of the ContractViz+ views
+     *
+     * @author Alexandre Arezes
      */
-    public static final RGBAColor BLUE = new RGBAColor(0, 0, 255);
+    @NonNull
+    public static final RGBAColor CYAN = new RGBAColor(102, 197, 204);
+
+    /**
+     * Gets an instance of {@link RGBAColor} that represents orange color
+     */
+
+    @NonNull
+    public static final RGBAColor ORANGE = new RGBAColor(246, 207, 113);
 
     /**
      * Gets an instance of {@link RGBAColor} that represents red color
      */
-    public static final RGBAColor RED = new RGBAColor(255, 0, 0);
+    @NonNull
+    public static final RGBAColor RED = new RGBAColor(248, 156, 116);
 
     /**
-     * Gets an instance of {@link RGBAColor} that represents gree color
+     * Gets an instance of {@link RGBAColor} that represents light purple color
      */
-    public static final RGBAColor GREEN = new RGBAColor(0, 255, 0);
+    @NonNull
+    public static final RGBAColor LIGHT_PURPLE = new RGBAColor(220,176,242);
 
     /**
-     * Gets an instance of {@link RGBAColor} that represents magenta color
+     * Gets an instance of {@link RGBAColor} that represents green color
      */
-    public static final RGBAColor MAGENTA = new RGBAColor(255, 0, 255);
+    @NonNull
+    public static final RGBAColor GREEN = new RGBAColor(135,197,95);
 
     /**
-     * Gets an instance of {@link RGBAColor} that represents cyan color
+     * Gets an instance of {@link RGBAColor} that represents blue color
      */
-    public static final RGBAColor CYAN = new RGBAColor(0, 255, 255);
+    @NonNull
+    public static final RGBAColor BLUE = new RGBAColor(158, 185, 243);
 
     /**
-     * Gets an instance of {@link RGBAColor} that represents dark blue color
+     * Gets an instance of {@link RGBAColor} that represents pink color
      */
-    public static final RGBAColor DARK_BLUE = new RGBAColor(0, 0, 128);
-
-    /**
-     * Gets an instance of {@link RGBAColor} that represents dark red color
-     */
-    public static final RGBAColor DARK_RED = new RGBAColor(128, 0, 0);
-
-    /**
-     * Gets an instance of {@link RGBAColor} that represents dark green color
-     */
-    public static final RGBAColor DARK_GREEN = new RGBAColor(0, 128, 0);
-
-    /**
-     * Gets an instance of {@link RGBAColor} that represents dark magenta color
-     */
-    public static final RGBAColor DARK_MAGENTA = new RGBAColor(128, 0, 128);
-
-    /**
-     * Gets an instance of {@link RGBAColor} that represents dark cyan color
-     */
-    public static final RGBAColor DARK_CYAN = new RGBAColor(0, 128, 125);
-
-    /**
-     * Gets an instance of {@link RGBAColor} that represents dark yellow color
-     */
-    public static final RGBAColor DARK_YELLOW = new RGBAColor(128, 128, 0);
-
-    /**
-     * Gets an instance of {@link RGBAColor} that represents black color
-     */
-    public static final RGBAColor BLACK = new RGBAColor(0, 0, 0);
-
-    /**
-     * Gets an instance of {@link RGBAColor} that represents gray color
-     */
-    public static final RGBAColor GRAY = new RGBAColor(192, 192, 192);
+    @NonNull
+    public static final RGBAColor PINK = new RGBAColor(254, 136, 177);
 
     /**
      * Gets an instance of {@link RGBAColor} that represents yellow color
      */
-    public static final RGBAColor YELLOW = new RGBAColor(255, 255, 0);
+    @NonNull
+    public static final RGBAColor YELLOW = new RGBAColor(201, 219, 116);
 
+    /**
+     * Gets an instance of {@link RGBAColor} that represents light green color
+     */
+    @NonNull
+    public static final RGBAColor LIGHT_GREEN = new RGBAColor(139, 224, 164);
 
+    /**
+     * Gets an instance of {@link RGBAColor} that represents purple color
+     */
+    @NonNull
+    public static final RGBAColor PURPLE = new RGBAColor(180, 151, 231);
 
-    public static final RGBAColor PASTEL_CYAN = new RGBAColor(102, 197, 204);
-    public static final RGBAColor PASTEL_ORANGE = new RGBAColor(246, 207, 113);
-    public static final RGBAColor PASTEL_RED = new RGBAColor(248, 156, 116);
-    public static final RGBAColor PASTEL_LIGHT_PURPLE = new RGBAColor(220,176,242);
-    public static final RGBAColor PASTEL_GREEN = new RGBAColor(135,197,95);
-    public static final RGBAColor PASTEL_BLUE = new RGBAColor(158, 185, 243);
-    public static final RGBAColor PASTEL_PINK = new RGBAColor(254, 136, 177);
-    public static final RGBAColor PASTEL_YELLOW = new RGBAColor(201, 219, 116);
-    public static final RGBAColor PASTEL_LIGHT_GREEN = new RGBAColor(139, 224, 164);
-    public static final RGBAColor PASTEL_PURPLE = new RGBAColor(180, 151, 231);
-    public static final RGBAColor PASTEL_BROWN = new RGBAColor(211, 180, 132);
-    public static final RGBAColor PASTEL_GRAY = new RGBAColor(179, 179, 179);
+    /**
+     * Gets an instance of {@link RGBAColor} that represents brown color
+     */
+    @NonNull
+    public static final RGBAColor BROWN = new RGBAColor(211, 180, 132);
 
-
-
-
-
-
-    /*private static final List<@NonNull RGBAColor> PALETTE = Arrays.asList(
-            BLUE, RED, GREEN, MAGENTA, CYAN, DARK_BLUE, DARK_RED, DARK_GREEN,
-            DARK_MAGENTA, DARK_CYAN, DARK_YELLOW, BLACK, GRAY, YELLOW);*/
+    /**
+     * Gets an instance of {@link RGBAColor} that represents gray color
+     */
+    @NonNull
+    public static final RGBAColor GRAY = new RGBAColor(179, 179, 179);
 
     private static final List<@NonNull RGBAColor> PALETTE = Arrays.asList(
-            PASTEL_CYAN, PASTEL_ORANGE, PASTEL_RED, PASTEL_LIGHT_PURPLE,
-            PASTEL_GREEN, PASTEL_BLUE, PASTEL_PINK, PASTEL_YELLOW,
-            PASTEL_LIGHT_GREEN, PASTEL_PURPLE, PASTEL_BROWN, PASTEL_GRAY);
+            CYAN, ORANGE, RED, LIGHT_PURPLE,
+            GREEN, BLUE, PINK, YELLOW,
+            LIGHT_GREEN, PURPLE, BROWN, GRAY);
 
     /**
      * Get the default default color palette provider
      */
-    public static final CustomColorPaletteProvider INSTANCE = new CustomColorPaletteProvider();
+    public static CustomColorPaletteProvider fInstance = new CustomColorPaletteProvider();
 
     private final Map<Long, RGBAColor> assignedColors = new HashMap<>();
     private int currentIndex = 0;
 
     private CustomColorPaletteProvider() {
         // do nothing
+    }
+
+    public static CustomColorPaletteProvider getInstance() {
+        if (fInstance == null) {
+            fInstance = new CustomColorPaletteProvider();
+        }
+        return fInstance;
     }
 
     @Override
@@ -191,7 +181,6 @@ public class CustomColorPaletteProvider implements IPaletteProvider{
             }
         }
 
-        //return new OutputElementStyle(FlameDefaultPalette2.getInstance().getStyleFor(state).getParentKey(), s);
         return new OutputElementStyle("1", style);
     }
 

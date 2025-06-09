@@ -57,7 +57,7 @@ public class XYPresentationProvider implements IXYPresentationProvider {
             StyleProperties.SymbolType.CROSS);
 
     /* Gets the default palette for available colors for XY series */
-    private static final IPaletteProvider COLOR_PALETTE = CustomColorPaletteProvider.INSTANCE;
+    private static final IPaletteProvider COLOR_PALETTE = CustomColorPaletteProvider.getInstance();
 
     /* This maps a series id and an OutputElementStyle */
     private final Map<Long, OutputElementStyle> fYAppearances = new HashMap<>();
@@ -85,7 +85,7 @@ public class XYPresentationProvider implements IXYPresentationProvider {
 
     private OutputElementStyle createAppearance(Long seriesId, String seriesType, int width) {
         //RGBAColor color = generateColor();
-        RGBAColor color = CustomColorPaletteProvider.INSTANCE.getColor(seriesId);
+        RGBAColor color = CustomColorPaletteProvider.getInstance().getColor(seriesId);
 
         Builder<String, Object> builder = ImmutableMap.builder();
         builder.put(StyleProperties.STYLE_NAME, seriesId);

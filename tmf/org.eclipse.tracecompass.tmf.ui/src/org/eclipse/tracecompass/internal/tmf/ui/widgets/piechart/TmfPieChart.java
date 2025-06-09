@@ -37,8 +37,6 @@ import org.eclipse.swtchart.IPlotArea;
 import org.eclipse.swtchart.ISeries.SeriesType;
 import org.eclipse.tracecompass.internal.tmf.ui.viewers.piecharts.Messages;
 import org.eclipse.tracecompass.tmf.core.CustomColorPaletteProvider;
-//import org.eclipse.tracecompass.tmf.core.presentation.IPaletteProvider;
-//import org.eclipse.tracecompass.tmf.core.presentation.QualitativePaletteProvider;
 import org.eclipse.tracecompass.tmf.core.presentation.RGBAColor;
 
 /**
@@ -204,7 +202,7 @@ public class TmfPieChart extends Chart {
     //private static final int NUM_COLORS = 23;
 
     //private static final IPaletteProvider PALETTE = new QualitativePaletteProvider.Builder().setNbColors(NUM_COLORS).build();
-    private static final CustomColorPaletteProvider PALETTE = CustomColorPaletteProvider.INSTANCE;
+    private static final CustomColorPaletteProvider PALETTE = CustomColorPaletteProvider.getInstance();
     private static final ColorRegistry REGISTRY = new ColorRegistry();
 
     private static final int X_GAP = 10;

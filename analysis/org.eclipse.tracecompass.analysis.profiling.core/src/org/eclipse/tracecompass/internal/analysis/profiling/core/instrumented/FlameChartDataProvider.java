@@ -697,9 +697,6 @@ public class FlameChartDataProvider extends AbstractTmfTraceDataProvider impleme
         String name = String.valueOf(fTimeEventNames.getUnchecked(new Pair<>(pid, function)));
 
         return new TimeGraphState(function.getStart(), function.getLength(), name, getStyle(name, state));
-        //return new TimeGraphState(function.getStart(), function.getLength(), name, CustomColorPaletteProvider.INSTANCE.getStyleFor(name.hashCode(), state));
-
-        //return new TimeGraphState(function.getStart(), function.getLength(), name, FlameDefaultPalette2.getInstance().getStyleFor(state));
     }
 
     private OutputElementStyle getStyle(String name, ISegment state) {
@@ -717,7 +714,7 @@ public class FlameChartDataProvider extends AbstractTmfTraceDataProvider impleme
             style.put(StyleProperties.BACKGROUND_COLOR, "#0000ff");
             return new OutputElementStyle("1", style);
         default:
-            return CustomColorPaletteProvider.INSTANCE.getStyleFor(name, state);
+            return CustomColorPaletteProvider.getInstance().getStyleFor(name, state);
         }
     }
 
