@@ -32,7 +32,6 @@ import org.eclipse.zest.layouts.algorithms.TreeLayoutAlgorithm;
 import org.example.statediagram.model.State;
 import org.example.statediagram.model.StateGraph;
 import org.example.statediagram.model.StateMachineManager;
-import org.example.statediagram.model.TransactionParser;
 import org.example.statediagram.signal.NodeSelectedSignal; 
 
 public class StateDiagramView extends ViewPart {
@@ -162,6 +161,7 @@ public class StateDiagramView extends ViewPart {
     @Override  
     public void dispose() {  
         TmfSignalManager.deregister(this);
+        StateMachineManager.getInstance().dispose();
         super.dispose();  
     }
     

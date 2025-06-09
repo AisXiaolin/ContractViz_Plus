@@ -1,6 +1,5 @@
 package org.example.statediagram.model;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -14,7 +13,6 @@ import org.eclipse.tracecompass.tmf.core.trace.TmfTraceManager;
 
 public class StateMachineManager {
     private static StateMachineManager fInstance;
-    private final Map<String, StateGraph> fGraphs = new HashMap<>();
     private final Map<ITmfTrace, Map<String, StateGraph>> fTraceGraph = new HashMap<>();
 	private ITmfTrace fCurrentTrace;
 
@@ -57,5 +55,9 @@ public class StateMachineManager {
     @TmfSignalHandler
     public void traceSelected(TmfTraceSelectedSignal signal) {		
 		fCurrentTrace = signal.getTrace();
+    }
+    
+    public void dispose() {
+    	TmfSignalManager.deregister(this);
     }
 }
