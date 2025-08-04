@@ -2,7 +2,7 @@ name: Build and Deploy P2
 
 on:
   push:
-    branches: [main]
+    branches: [master]
 
 jobs:
   build:
@@ -15,7 +15,7 @@ jobs:
         uses: actions/setup-java@v4
         with:
           distribution: temurin
-          java-version: 17
+          java-version: 21
 
       - name: Build with Maven (Tycho)
         run: mvn clean verify -Dmaven.test.skip=true -DskipTests
