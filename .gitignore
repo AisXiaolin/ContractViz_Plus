@@ -11,3 +11,5 @@ workspace/
 # VS Code
 .devcontainer
 .vscode
+
+*.log

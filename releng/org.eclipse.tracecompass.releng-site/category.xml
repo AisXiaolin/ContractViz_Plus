@@ -40,5 +40,6 @@
    <bundle id="org.eclipse.tracecompass.trace-event-logger"/>
    <bundle id="org.apache.commons.lang3"/>
    <bundle id="json"/>
+   <bundle id="se.kth.contractvizplus"/>
    <category-def name="Trace Compass" label="Trace Compass Main Features"/>
 </site>

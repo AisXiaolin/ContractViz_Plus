@@ -362,6 +362,7 @@
     <module>tmf</module>
     <module>jsontrace</module>
     <module>org.example.statediagram</module>
+    <module>contractvizplus</module>
   </modules>
 
   <build>

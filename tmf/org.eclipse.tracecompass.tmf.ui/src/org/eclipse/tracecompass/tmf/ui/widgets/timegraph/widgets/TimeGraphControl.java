@@ -139,7 +139,7 @@ import org.eclipse.tracecompass.tmf.ui.widgets.timegraph.model.MarkerEvent;
 import org.eclipse.tracecompass.tmf.ui.widgets.timegraph.model.TimeGraphEntry;
 import org.eclipse.tracecompass.traceeventlogger.LogUtils;
 import org.eclipse.tracecompass.traceeventlogger.LogUtils.ScopeLog;
-import org.example.statediagram.model.TransactionManager;
+import se.kth.contractvizplus.model.TransactionManager;
 
 import com.google.common.collect.Iterables;
 

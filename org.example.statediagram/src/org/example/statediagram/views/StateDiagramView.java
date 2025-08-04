@@ -29,10 +29,10 @@ import org.eclipse.zest.core.widgets.GraphItem;
 import org.eclipse.zest.core.widgets.GraphNode;
 import org.eclipse.zest.core.widgets.ZestStyles;
 import org.eclipse.zest.layouts.algorithms.TreeLayoutAlgorithm;
-import org.example.statediagram.model.State;
-import org.example.statediagram.model.StateGraph;
-import org.example.statediagram.model.StateMachineManager;
-import org.example.statediagram.signal.NodeSelectedSignal; 
+import se.kth.contractvizplus.model.State;
+import se.kth.contractvizplus.model.StateGraph;
+import se.kth.contractvizplus.model.StateMachineManager;
+import se.kth.contractvizplus.signal.NodeSelectedSignal; 
 
 public class StateDiagramView extends ViewPart {
 
@@ -108,7 +108,7 @@ public class StateDiagramView extends ViewPart {
             node.setText(state.getName());
             node.setBackgroundColor(new Color(255,255,255));
             node.setForegroundColor(new Color(0,0,0));
-            node.setHighlightColor(state.getColor());
+            node.setHighlightColor(new Color(state.getColor().getRed(), state.getColor().getGreen(), state.getColor().getBlue()));
             Label tooltipLabel = new Label(state.getTooltip());
             node.setTooltip(tooltipLabel);
             node.setData(state.getIndex());

@@ -1,10 +1,9 @@
-package org.example.statediagram.model;
+package se.kth.contractvizplus.model;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 
 import org.eclipse.tracecompass.tmf.core.event.ITmfEvent;
 import org.eclipse.tracecompass.tmf.core.event.ITmfEventField;
@@ -19,6 +18,18 @@ import org.eclipse.tracecompass.tmf.core.trace.ITmfContext;
 import org.eclipse.tracecompass.tmf.core.trace.ITmfTrace;
 import org.eclipse.tracecompass.tmf.core.trace.TmfTraceManager;
 
+/**
+ * Singleton manager for handling transactions and functions across different TMF traces.
+ * <p>
+ * This manager processes trace events to extract transaction and function execution information,
+ * maintains mappings between functions and their entry IDs, and responds to various TMF signals
+ * for trace lifecycle management. It also handles UI view updates when traces are selected.
+ * </p>
+ *
+ * @author Alexandre Arezes
+ * @version 1.0
+ * @since 2025-06-17
+ */
 public class TransactionManager {
 	
 	private static TransactionManager fInstance = null;
@@ -29,11 +40,19 @@ public class TransactionManager {
 	private long fSizeArrow;
 	private Map<ITmfTrace, Integer> fDepth = new HashMap<>();
 
+	/**
+	 * Private constructor for singleton pattern.
+	 * Initializes the current trace and registers for TMF signal notifications.
+	 */
 	private TransactionManager() {
 		fCurrentTrace = TmfTraceManager.getInstance().getActiveTrace();
         TmfSignalManager.registerVIP(this);         
 	}
 	
+	/**
+	 * Disposes the singleton instance and unregisters from signal management.
+	 * This method is thread-safe and should be called when the manager is no longer needed.
+	 */
 	public static synchronized void dispose() {  
 	    TransactionManager manager = fInstance;  
 	    if (manager != null) {  
@@ -42,6 +61,11 @@ public class TransactionManager {
 	    fInstance = null;  
 	}
 	
+	/**
+	 * Returns the singleton instance of {@link TransactionManager}.
+	 *
+	 * @return the singleton instance
+	 */
 	public static TransactionManager getInstance() {
 		if (fInstance == null) {
 			fInstance = new TransactionManager();
@@ -49,22 +73,55 @@ public class TransactionManager {
 		return fInstance;
 	}
 
+	/**
+	 * Returns the list of transactions for the specified trace.
+	 *
+	 * @param trace the {@link ITmfTrace} to get transactions for
+	 * @return a list of {@link Transaction} objects, or an empty list if none exist
+	 */
 	public List<Transaction> getTransactions(ITmfTrace trace) {
 		return fTraceTransactions.getOrDefault(trace, new ArrayList<Transaction>());
 	}
 	
+	/**
+	 * Returns the list of functions for the current trace.
+	 *
+	 * @return a list of {@link Function} objects for the current trace, or an empty list if none exist
+	 */
 	public List<Function> getFunctions() {
 		return fTraceFunctions.getOrDefault(fCurrentTrace, new ArrayList<Function>());
 	}
 	
+	/**
+	 * Returns the current arrow size used for visualization.
+	 * The arrow size is calculated based on the time range and is used for scaling purposes.
+	 *
+	 * @return the current arrow size
+	 */
 	public long getSizeArrow() {
 		return fSizeArrow;
 	}
 
+	/**
+	 * Returns the depth multiplied by a scaling factor for the current trace.
+	 * The depth represents the number of concurrent function executions.
+	 *
+	 * @return the scaled depth (depth * 1.7) for the current trace
+	 */
 	public int getDepth() {
 		return (int) ((int) fDepth.getOrDefault(fCurrentTrace, 0)*1.7);
 	}
 	
+	/**
+	 * Adds a transaction extracted from a trace event field.
+	 * <p>
+	 * This method parses various fields from the event to construct a {@link Transaction}
+	 * object and adds it to the transaction list for the specified trace.
+	 * </p>
+	 *
+	 * @param trace the {@link ITmfTrace} the transaction belongs to
+	 * @param eventField the {@link ITmfEventField} containing transaction data
+	 */
 	public void addTransaction(ITmfTrace trace, ITmfEventField eventField) {
 	    ITmfEventField tsField = eventField.getField("ts");  
 	    long time = (tsField != null) ? Long.parseLong(tsField.getFormattedValue()) : 0;  
@@ -88,16 +145,39 @@ public class TransactionManager {
 		fTraceTransactions.computeIfAbsent(trace, k -> new ArrayList<>()).add(new Transaction(sender, receiver, time, amount, type, tokenName));
 	}
 	
-	
+	/**
+	 * Registers a mapping between a function ID and its corresponding entry ID for a trace.
+	 *
+	 * @param trace the {@link ITmfTrace} the function belongs to
+	 * @param functionId the function identifier
+	 * @param entryId the entry identifier to associate with the function
+	 */
 	public void registerFunctionEntryId(ITmfTrace trace, int functionId, long entryId) {  
 	    fFunctionToEntryIdMap.computeIfAbsent(trace, k -> new HashMap<>()).put(functionId, entryId);  
 	}  
 	
+	/**
+	 * Returns the entry ID for a given function ID in the specified trace.
+	 *
+	 * @param trace the {@link ITmfTrace} to search in
+	 * @param functionId the function identifier
+	 * @return the corresponding entry ID, or -1 if not found
+	 */
 	public long getEntryIdForFunction(ITmfTrace trace, int functionId) {  
 	    Map<Integer, Long> map = fFunctionToEntryIdMap.get(trace);  
 	    return map != null ? map.getOrDefault(functionId, -1L) : -1L;  
 	}
 	
+	/**
+	 * Signal handler for trace opened events.
+	 * <p>
+	 * This method processes all events in the opened trace to extract function execution
+	 * information and transactions. It identifies function start ('B') and end ('E') events
+	 * to build a complete picture of function executions, and processes transaction events.
+	 * </p>
+	 *
+	 * @param signal the {@link TmfTraceOpenedSignal} event
+	 */
 	@TmfSignalHandler  
     public synchronized void traceOpened(TmfTraceOpenedSignal signal) { 
 		System.out.println("Signal received : " + signal);
@@ -159,6 +239,15 @@ public class TransactionManager {
         
 	}
 	
+	/**
+	 * Signal handler for trace closed events.
+	 * <p>
+	 * Cleans up all data associated with the closed trace, including transactions,
+	 * functions, and state machine data.
+	 * </p>
+	 *
+	 * @param signal the {@link TmfTraceClosedSignal} event
+	 */
 	@TmfSignalHandler  
     public synchronized void traceClosed(TmfTraceClosedSignal signal) {  
 		System.out.println("Signal received : " + signal);
@@ -168,6 +257,15 @@ public class TransactionManager {
         StateMachineManager.getInstance().clear(trace);
     }  
 	
+	/**
+	 * Signal handler for trace selection events.
+	 * <p>
+	 * Updates the current trace and recalculates the arrow size. Also triggers
+	 * the opening of relevant UI views in the Eclipse workbench for trace analysis.
+	 * </p>
+	 *
+	 * @param signal the {@link TmfTraceSelectedSignal} event
+	 */
 	@TmfSignalHandler  
 	public void traceSelected(TmfTraceSelectedSignal signal) {		
 		ITmfTrace trace = signal.getTrace();
@@ -180,31 +278,16 @@ public class TransactionManager {
 		fCurrentTrace = trace;
 		fSizeArrow = fCurrentTrace.getEndTime().getValue() - fCurrentTrace.getStartTime().getValue();
 		fSizeArrow /= 50;
-
-//	    Display.getDefault().asyncExec(() -> {  
-//	        IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();  
-//	        if (window != null) {  
-//	            IWorkbenchPage activePage = window.getActivePage();  
-//	            if (activePage != null) {  
-//	                try {  	                	
-//	                	
-//	                    IViewPart viewPart = activePage.showView("org.eclipse.tracecompass.analysis.profiling.ui.flamechart:org.eclipse.tracecompass.incubator.traceevent.analysis.callstack",   
-//	                                      null, IWorkbenchPage.VIEW_ACTIVATE);  
-//	                    activePage.showView("org.example.statediagram.views.statediagramview",   
-//                                null, IWorkbenchPage.VIEW_ACTIVATE);  
-//	                    activePage.showView("org.eclipse.linuxtools.tmf.ui.views.statistics",   
-//                                null, IWorkbenchPage.VIEW_ACTIVATE); 
-//	                    
-//	                    TmfSignalManager.dispatchSignal(new TmfTraceSelectedSignal(this, trace));  
-//	                    
-//	                } catch (PartInitException e) {  
-//	                    // Gérer l'erreur  
-//	                }  
-//	            }  
-//	        }  
-//	    });  
 	}
 	
+	/**
+	 * Signal handler for window range update events.
+	 * <p>
+	 * Recalculates the arrow size based on the new time range for proper visualization scaling.
+	 * </p>
+	 *
+	 * @param signal the {@link TmfWindowRangeUpdatedSignal} event
+	 */
 	@TmfSignalHandler  
 	public void intervalChanged(TmfWindowRangeUpdatedSignal signal) {		
 		TmfTimeRange range = signal.getCurrentRange();

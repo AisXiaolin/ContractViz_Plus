@@ -84,8 +84,8 @@ import org.eclipse.tracecompass.tmf.ui.widgets.timegraph.widgets.TimeGraphContro
 import org.eclipse.tracecompass.tmf.ui.widgets.timegraph.widgets.Utils;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchActionConstants;
-import org.example.statediagram.model.State;
-import org.example.statediagram.signal.NodeSelectedSignal;
+import se.kth.contractvizplus.model.State;
+import se.kth.contractvizplus.signal.NodeSelectedSignal;
 
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
