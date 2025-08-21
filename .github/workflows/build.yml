@@ -24,6 +24,6 @@ jobs:
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./target/repository
+          publish_dir: ./releng/org.eclipse.tracecompass.releng-site/target/repository/
           force_orphan: true
 
